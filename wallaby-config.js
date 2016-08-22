@@ -4,10 +4,13 @@ module.exports = function (wallaby) {
             'src/**/*.js'
         ],
         tests: [
-            'src/test/**/*spec.js'
+            'test/**/*spec.js'
         ],
         compilers: {
-            '**/*.js': wallaby.compilers.babel({presets: ["es2015"]})
+            '**/*.js': wallaby.compilers.babel()
+        },
+        env: {
+            type: 'node'
         }
     };
 };
