@@ -1,0 +1,25 @@
+{
+  "name": "mssql-snapshot",
+  "version": "0.0.1",
+  "description": "An npm package for creating and restoring mssql snapshots.",
+  "main": "index.js",
+  "scripts": {
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/codeEmitter/mssql-snapshot.git"
+  },
+  "keywords": [
+    "sql",
+    "mssql",
+    "snapshot",
+    "backup"
+  ],
+  "author": "codeEmitter",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/codeEmitter/mssql-snapshot/issues"
+  },
+  "homepage": "https://github.com/codeEmitter/mssql-snapshot#readme"
+}
