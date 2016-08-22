@@ -4,7 +4,8 @@
   "description": "An npm package for creating and restoring mssql snapshots.",
   "main": "index.js",
   "scripts": {
-    "test": "test"
+    "compile": "./node_modules/.bin/babel --presets es2015 -d lib/ src/",
+    "prepublish": "npm run compile"
   },
   "repository": {
     "type": "git",
