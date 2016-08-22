@@ -7,7 +7,7 @@ module.exports = function (wallaby) {
             'src/test/**/*spec.js'
         ],
         compilers: {
-            '**/*.js': wallaby.compilers.babel()
+            '**/*.js': wallaby.compilers.babel({presets: ["es2015"]})
         }
     };
 };
