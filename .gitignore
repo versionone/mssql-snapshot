@@ -1,3 +1,7 @@
+# Custom dirs
+lib
+.idea
+
 # Logs
 logs
 *.log
