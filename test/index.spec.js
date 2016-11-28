@@ -1,8 +1,11 @@
 import 'babel-polyfill';
-import { expect } from 'chai';
+import { expect, before } from 'chai';
 
-describe("A suite", () => {
-    it("contains spec with an expectation", function() {
+describe("when connecting to mssql database via a connection string", () => {
+    beforeEach(function(){
+        let current = 'a,b,c'.split(',');
+    });
+    it("connects successfully", function() {
         expect(1).to.be.a('number');
     });
 });
