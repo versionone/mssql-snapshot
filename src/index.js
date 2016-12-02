@@ -1,6 +1,6 @@
 
 export default class MssqlSnapshot {
-    static testConnect(config){
+    static testConnection(config){
         throw new Error('No configuration information supplied.')
     }
 }
