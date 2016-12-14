@@ -1,11 +1,14 @@
 import 'babel-polyfill';
-import { expect, before } from 'chai';
-import sql from 'mssql';
+import chai from 'chai';
+import chaiAsPromised from 'chai-as-promised';
 
-import MssqlSnapshot from '../src/index';
+chai.use(chaiAsPromised);
+chai.should();
+
+import MssqlSnapshot from '../src/MssqlSnapshot';
 
 describe("when testing the database connection", () => {
-    it("config info must be supplied", function() {
-        expect(MssqlSnapshot.testConnection).to.throw(/No configuration information supplied./);
+    it("succeeds with the correct connection string", (done) => {
+        return MssqlSnapshot.testConnection("mssql://pub:pub@localhost/V1Demo").should.eventually.become([{CONNECTION: 'Succeeded'}]).notify(done);
     });
 });
