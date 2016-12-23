@@ -17,7 +17,7 @@ describe("when testing the database connection", function() {
         target = new MssqlSnapshot(config({ connect: sinon.stub().rejects(Error(msg))}));
     });
     it("it fails with a specific error when config information is missing", () => {
-       return target.testConnection().should.eventually
+       target.testConnection().should.eventually
            .be.rejectedWith(msg)
            .and.be.an.instanceOf(Error);
     });
