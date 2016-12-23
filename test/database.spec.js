@@ -13,7 +13,7 @@ describe("when retrieving a database object to perform queries", function() {
     it("it return a mssql npm module when config.isUnitTest is false", () => {
        database({isUnitTest: false}).should.eql(sql);
     });
-    it("it retuns a fakeDb when config.isUnitTest is true", () => {
+    it("it returns a fakeDb when config.isUnitTest is true", () => {
         const fakeDb = {connect: () => {}};
         database({isUnitTest: true, fakeDb: fakeDb}).should.eql(fakeDb);
     });
