@@ -1,4 +1,5 @@
 import chai from 'chai';
+chai.should();
 import sql from 'mssql';
 
 import database from '../src/database';
