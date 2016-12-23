@@ -1,11 +1,11 @@
-
-import sql from 'mssql';
-
 export default class MssqlSnapshot {
-    static testConnection(config) {
+    constructor(db) {
+        this.db = db;
+    }
+    testConnection(config) {
         return new Promise((resolve, reject)=> {
             try{
-                resolve(sql.connect(config).then((result) => new sql.Request().query("SELECT 'Succeeded' as CONNECTION")));
+                resolve(this.db.connect(config).then((result) => new this.db.Request().query("SELECT 'Succeeded' as CONNECTION")));
             }
             catch(error) {
                 reject(error);
