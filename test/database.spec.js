@@ -9,7 +9,7 @@ describe("when retrieving a database object to perform queries", function() {
         database().should.eql(sql);
     });
     it("it returns a mssql npm module when config.isUnitTest is undefined", () => {
-       database({}).should.eql(sql);
+        database({}).should.eql(sql);
     });
     it("it return a mssql npm module when config.isUnitTest is false", () => {
        database({isUnitTest: false}).should.eql(sql);
