@@ -5,6 +5,7 @@ import chaiAsPromised from 'chai-as-promised';
 chai.use(chaiAsPromised);
 chai.should();
 
+import databaseConfig from '../src/databaseConfig';
 import Database from '../src/database';
 import MssqlSnapshot from '../src/MssqlSnapshot';
 
@@ -19,5 +20,16 @@ describe("when testing the database connection with invalid config info", functi
     });
     it("it returns a thenable promise", () => {
         target.testConnection().should.be.an.instanceOf(Promise);
+    });
+});
+
+describe("when testing the database connection with valid config info", function() {
+    let target, dbConfig = null;
+    beforeEach(function() {
+        dbConfig = databaseConfig();
+        target = new MssqlSnapshot(new Database(dbConfig));
+    });
+    it("it resolves with a success message", () => {
+        target.testConnection().should.become("Success!");
     });
 });
