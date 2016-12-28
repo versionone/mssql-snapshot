@@ -4,8 +4,9 @@
   "description": "An npm package for creating and restoring mssql snapshots.",
   "main": "index.js",
   "scripts": {
+    "test": "./node_modules/.bin/mocha --compilers js:babel-core/register --recursive",
     "compile": "./node_modules/.bin/babel -d lib/ src/",
-    "watch": "./node_modules/.bin/babel -d -w lib/ --out-dir src/",
+    "watch": "./node_modules/.bin/babel -d -w src/ --out-dir lib/",
     "prepublish": "npm run compile"
   },
   "repository": {
@@ -29,6 +30,10 @@
     "babel-core": "6.13.2",
     "babel-polyfill": "6.3.14",
     "babel-preset-es2015": "6.13.2",
-    "chai": "3.5.0"
+    "chai": "3.5.0",
+    "mocha": "3.2.0"
+  },
+  "dependencies": {
+    "mssql": "3.3.0"
   }
 }
