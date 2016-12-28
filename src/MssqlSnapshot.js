@@ -7,7 +7,7 @@ export default class MssqlSnapshot {
         return new Promise((resolve, reject) => {
             this.database.connect(this.config, (err) => {
                 if (err) {
-                    reject(new Error(""));
+                    reject(err);
                 } else {
                     resolve("Success!");
                 }
