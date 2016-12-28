@@ -8,9 +8,8 @@ import Database from '../src/database';
 import MssqlSnapshot from '../src/MssqlSnapshot';
 
 describe("when testing the database connection with invalid config info", function() {
-    let target, msg = null;
+    let target = null;
     beforeEach(function() {
-        msg = "Login failed for user 'incorrectUser'.";
         target = new MssqlSnapshot(new Database({user: "incorrectUser"}))
     });
     it("it rejects with a proper error message", (done) => {
@@ -19,7 +18,7 @@ describe("when testing the database connection with invalid config info", functi
                 done(result);
             },
             (err) => {
-                err.message.should.eql(msg);
+                err.message.should.eql("Login failed for user 'incorrectUser'.");
                 err.code.should.eql("ELOGIN");
                 done();
             }
