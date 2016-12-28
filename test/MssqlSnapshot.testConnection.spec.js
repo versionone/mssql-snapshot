@@ -1,8 +1,6 @@
 import 'babel-polyfill';
 import chai from 'chai';
-import chaiAsPromised from 'chai-as-promised';
 
-chai.use(chaiAsPromised);
 chai.should();
 
 import databaseConfig from '../src/databaseConfig';
@@ -15,11 +13,17 @@ describe("when testing the database connection with invalid config info", functi
         msg = "Login failed for user 'incorrectUser'.";
         target = new MssqlSnapshot(new Database({user: "incorrectUser"}))
     });
-    it("it rejects with a proper error message", () => {
-        target.testConnection().should.be.rejectedWith(msg)
-    });
-    it("it returns a thenable promise", () => {
-        target.testConnection().should.be.an.instanceOf(Promise);
+    it("it rejects with a proper error message", (done) => {
+        target.testConnection().then(
+            (result) => {
+                done(result);
+            },
+            (err) => {
+                err.message.should.eql(msg);
+                err.code.should.eql("ELOGIN");
+                done();
+            }
+        );
     });
 });
 
@@ -29,7 +33,15 @@ describe("when testing the database connection with valid config info", function
         dbConfig = databaseConfig();
         target = new MssqlSnapshot(new Database(dbConfig));
     });
-    it("it resolves with a success message", () => {
-        target.testConnection().should.become("Success!");
+    it("it resolves with a success message", (done) => {
+        target.testConnection().then(
+            (result) => {
+                result.should.eql("Success!");
+                done()
+            },
+            (err) => {
+                done(err);
+            }
+        );
     });
 });
