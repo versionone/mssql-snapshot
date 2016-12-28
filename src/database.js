@@ -1,6 +1,11 @@
 import sql from 'mssql';
-export default function(config){
-    return (!config || config.isUnitTest === undefined || config.isUnitTest === false)
-        ? sql
-        : config.fakeDb;
+
+export default class Database {
+    constructor(config){
+        if (!config) throw new Error("No configuration supplied to orchestrate the connection interface.");
+        this.config = config;
+    }
+    retrieve(){
+        return sql;
+    }
 }

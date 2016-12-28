@@ -1,22 +1,16 @@
 import chai from 'chai';
-chai.should();
 import sql from 'mssql';
 
-import database from '../src/database';
+chai.should();
+
+import Database from '../src/Database';
 
 describe("when retrieving a database object to perform queries", function() {
-    it("it returns a mssql npm module when no config is supplied", () => {
-        database().should.eql(sql);
+    it("it returns a mssql npm module when configuration is supplied", () => {
+        new Database({}).retrieve().should.eql(sql);
     });
-    it("it returns a mssql npm module when config.isUnitTest is undefined", () => {
-        database({}).should.eql(sql);
-    });
-    it("it return a mssql npm module when config.isUnitTest is false", () => {
-        const fakeDb = {connect: () => {}};
-        database({isUnitTest: false, fakeDb: fakeDb}).should.eql(sql);
-    });
-    it("it returns a fakeDb when config.isUnitTest is true", () => {
-        const fakeDb = {connect: () => {}};
-        database({isUnitTest: true, fakeDb: fakeDb}).should.eql(fakeDb);
+    it("it throws an error when no configuration object is supplied", () => {
+        const fn = () => new Database();
+        fn.should.throw("No configuration supplied to orchestrate the connection interface.");
     });
 });
