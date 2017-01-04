@@ -1,4 +1,4 @@
-import sql from 'mssql';
+import sql from 'seriate';
 
 export default class Database {
     constructor(config){
@@ -6,6 +6,7 @@ export default class Database {
         this.config = config;
     }
     retrieve(){
+        sql.setDefault(this.config);
         return sql;
     }
 }
