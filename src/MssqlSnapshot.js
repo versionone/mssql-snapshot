@@ -4,7 +4,9 @@ export default class MssqlSnapshot {
     }
     testConnection() {
         return this.database.execute({
-            query: "SELECT 'Successful' as Connection"
+            query: this.database.fromFile('./queries/testConnection.sql')
+        });
+    }
         });
     }
 }
