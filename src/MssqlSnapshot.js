@@ -9,7 +9,13 @@ export default class MssqlSnapshot {
     }
     listSnapshots() {
         return this.database.execute({
-            query: this.database.fromFile('./queries/listSnapshots.sql')
+            query: this.database.fromFile('./queries/listSnapshots.sql'),
+            params: {
+                sourceDbName: {
+                    val: this.database.sourceDbName,
+                    type: this.database.NVARCHAR(50)
+                }
+            }
         });
     }
 }

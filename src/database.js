@@ -9,4 +9,7 @@ export default class Database {
         sql.setDefault(this.config);
         return sql;
     }
+    sourceDbName(){
+        return this.config.database;
+    }
 }
