@@ -5,7 +5,7 @@ export default class Database {
         if (!config) throw new Error("No configuration supplied to orchestrate the connection interface.");
         this.config = config;
     }
-    retrieve(){
+    getSqlMarshal(){
         sql.setDefault(this.config);
         return sql;
     }

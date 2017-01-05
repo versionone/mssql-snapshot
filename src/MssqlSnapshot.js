@@ -1,19 +1,23 @@
 export default class MssqlSnapshot {
     constructor(database) {
-        this.database = database.retrieve();
+        this.database = database;
+        this.sqlMarshal = database.getSqlMarshal();
     }
     testConnection() {
-        return this.database.execute({
-            query: this.database.fromFile('./queries/testConnection.sql')
+        const marshal = this.sqlMarshal;
+        return marshal.execute({
+            query: marshal.fromFile('./queries/testConnection.sql')
         });
     }
     listSnapshots() {
-        return this.database.execute({
-            query: this.database.fromFile('./queries/listSnapshots.sql'),
+        const db = this.database;
+        const marshal = this.sqlMarshal;
+        return marshal.execute({
+            query: marshal.fromFile('./queries/listSnapshots.sql'),
             params: {
                 sourceDbName: {
-                    val: this.database.sourceDbName,
-                    type: this.database.NVARCHAR(50)
+                    val: db.sourceDbName(),
+                    type: marshal.NVARCHAR(50)
                 }
             }
         });

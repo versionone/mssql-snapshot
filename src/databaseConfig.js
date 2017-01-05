@@ -1,9 +1,9 @@
 export default function() {
     return {
-        user: 'user',
-        password: 'pass',
+        user: 'pub',
+        password: 'pub',
         server: 'localhost',
-        database: 'dbname',
+        database: 'V1Demo',
         pool: {
             max: 10,
             min: 0,
