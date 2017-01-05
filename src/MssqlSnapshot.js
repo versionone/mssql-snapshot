@@ -1,26 +1,20 @@
+import sql from 'seriate';
+
 export default class MssqlSnapshot {
-    constructor(database) {
-        this.database = database;
-        this.sqlMarshal = database.getSqlMarshal();
+    constructor(config){
+        if (!config) throw new Error("No configuration supplied to orchestrate the connection interface.");
+        this.config = config;
+        sql.setDefault(this.config);
     }
-    testConnection() {
-        const marshal = this.sqlMarshal;
-        return marshal.execute({
-            query: marshal.fromFile('./queries/testConnection.sql')
-        });
-    }
-    listSnapshots() {
-        const db = this.database;
-        const marshal = this.sqlMarshal;
-        return marshal.execute({
-            query: marshal.fromFile('./queries/listSnapshots.sql'),
+    listSnapshots(){
+        return sql.execute({
+            query: sql.fromFile('./queries/listSnapshots.sql'),
             params: {
                 sourceDbName: {
-                    val: db.sourceDbName(),
-                    type: marshal.NVARCHAR(50)
+                    val: this.config.database,
+                    type: sql.NVARCHAR(50)
                 }
             }
         });
     }
 }
-

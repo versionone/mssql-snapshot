@@ -1,1 +1,0 @@
-SELECT 'Successful' as Connection
