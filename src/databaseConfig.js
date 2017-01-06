@@ -1,9 +1,10 @@
 export default function() {
     return {
-        user: 'pub',
-        password: 'pub',
+        name: 'mssql-snapshot-default',
+        user: 'mssqlTestUser',
+        password: ',y#&$p2rYQ8VR?}&',
         server: 'localhost',
-        database: 'V1Demo',
+        database: 'mssql-snapshot-testdb',
         pool: {
             max: 10,
             min: 0,
