@@ -13,7 +13,7 @@ describe("when retrieving a list of snapshots", function() {
         target = new MssqlSnapshot(dbConfig);
     });
     it("it returns one result when configuration is valid", (done) => {
-        target.listSnapshots().then(
+        target.listAll().then(
             (result) => {
                 result.length.should.be.greaterThan(0);
                 done();
@@ -32,7 +32,7 @@ describe("when retrieving a list of snapshots", function() {
         });
     });
     it("it returns no results when the configuration is invalid", (done) => {
-        target.listSnapshots('fakeConnection').then(
+        target.listAll('fakeConnection').then(
             (result) => {
                 done(result);
             },

@@ -6,8 +6,8 @@ export default class MssqlSnapshot {
         this.config = config;
         sql.addConnection(this.config);
     }
-    listSnapshots(connectionName){
-        return sql.execute(connectionName || this.config.name, {
+    listAll(connectionName = this.config.name){
+        return sql.execute(connectionName, {
             query: sql.fromFile('./queries/listSnapshots.sql'),
             params: {
                 sourceDbName: {
