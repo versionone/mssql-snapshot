@@ -29,4 +29,4 @@ BEGIN
 	EXEC master..sp_addsrvrolemember @loginame = N'mssqlTestUser', @rolename = N'sysadmin'
 END
 
-CREATE DATABASE [mssql-snapshot-testdb-snap1] ON (NAME=[mssql-snapshot-testdb],FILENAME='c:\snapshots\mssql-snapshot-testdb-snap1') AS SNAPSHOT OF [mssql-snapshot-testdb];
+CREATE DATABASE [mssql-snapshot-testdb-snap1] ON (NAME=[mssql-snapshot-testdb],FILENAME='c:\\snapshots\\mssql-snapshot-testdb-snap1') AS SNAPSHOT OF [mssql-snapshot-testdb];
