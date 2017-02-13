@@ -6,13 +6,7 @@ DECLARE @SQL varchar(max)
 SELECT @SQL = COALESCE(@SQL,'') + 'Kill ' + Convert(varchar, SPId) + ';'
 FROM MASTER..SysProcesses
 WHERE DBId LIKE DB_ID(N'mssql-snapshot-test%') AND SPId <> @@SPId
-EXEC(@SQL)
-
-WHILE EXISTS(select NULL from sys.databases where name='mssql-snapshot-testdb-snap1')
-BEGIN
-	DROP DATABASE [mssql-snapshot-testdb-snap1]
-END
-GO
+EXEC(@SQL);
 
 WHILE EXISTS(select NULL from sys.databases where name='mssql-snapshot-testdb')
 BEGIN
