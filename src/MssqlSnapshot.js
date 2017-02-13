@@ -19,8 +19,13 @@ export default class MssqlSnapshot {
         });
     }
 
-    create(snapshotName, connectionName = this.config.name, snapshotStoragePath = this.config.snapshotStoragePath) {
+    _snapshotNameIsValid(snapshotName) {
         if (!snapshotName) throw new Error("No snapshot name supplied.");
+        return true;
+    }
+
+    create(snapshotName, connectionName = this.config.name, snapshotStoragePath = this.config.snapshotStoragePath) {
+        this._snapshotNameIsValid(snapshotName);
         const qualifiedPath = snapshotStoragePath + snapshotName;
         return sql.execute(connectionName, {
             query: sql.fromFile('./queries/createSnapshot.sql'),
@@ -40,6 +45,23 @@ export default class MssqlSnapshot {
                 snapshotPath: {
                     val: qualifiedPath,
                     type: sql.VARCHAR(200)
+                }
+            }
+        });
+    }
+
+    delete(snapshotName, connectionName = this.config.name) {
+        this._snapshotNameIsValid(snapshotName);
+        return sql.execute(connectionName, {
+            query: sql.fromFile('../src/queries/deleteSnapshot.sql'),
+            params: {
+                snapshotName: {
+                    val: snapshotName,
+                    type: sql.VARCHAR(100)
+                },
+                query: {
+                    val: '',
+                    type: sql.VARCHAR(300)
                 }
             }
         });

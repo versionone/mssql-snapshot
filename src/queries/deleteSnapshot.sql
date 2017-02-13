@@ -2,4 +2,5 @@ IF EXISTS(SELECT NULL FROM sys.databases WHERE [Name] = @snapshotName AND [sourc
 BEGIN
 	SET @query = 'DROP DATABASE [' + @snapshotName + '];'
 	EXEC(@query);
+	SELECT @snapshotName + ' was successfully deleted.' as 'Success';
 END
