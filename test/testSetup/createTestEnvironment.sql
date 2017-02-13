@@ -10,15 +10,15 @@ EXEC(@SQL);
 
 WHILE EXISTS(select NULL from sys.databases where name='mssql-snapshot-testdb')
 BEGIN
-    DROP DATABASE [mssql-snapshot-testdb]
+    DROP DATABASE [mssql-snapshot-testdb];
 END
 GO
 
-CREATE DATABASE [mssql-snapshot-testdb]
+CREATE DATABASE [mssql-snapshot-testdb];
 GO
 
 If NOT EXISTS (SELECT loginname FROM master.dbo.syslogins WHERE name = 'mssqlTestUser')
 BEGIN
 	CREATE LOGIN mssqlTestUser WITH PASSWORD = ',y#&$p2rYQ8VR?}&';
-	EXEC master..sp_addsrvrolemember @loginame = N'mssqlTestUser', @rolename = N'sysadmin'
+	EXEC master..sp_addsrvrolemember @loginame = N'mssqlTestUser', @rolename = N'sysadmin';
 END
