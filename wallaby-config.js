@@ -14,6 +14,9 @@ module.exports = function (wallaby) {
         },
         env: {
             type: 'node'
+        },
+        delays: {
+            run: 3000
         }
     };
 };
