@@ -1,6 +1,7 @@
 export default function() {
     return {
         name: 'mssql-snapshot-default',
+        snapshotStoragePath: 'c:\\snapshots\\',
         user: 'mssqlTestUser',
         password: ',y#&$p2rYQ8VR?}&',
         server: 'localhost',

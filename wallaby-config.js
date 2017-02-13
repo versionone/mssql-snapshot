@@ -2,9 +2,11 @@ module.exports = function (wallaby) {
     return {
         files: [
             'src/**/*.js',
-            'src/queries/**/*.sql'
+            'src/queries/**/*.sql',
+            'test/testUtilities.js'
         ],
         tests: [
+            'src/queries/**/*.sql',
             'test/**/*spec.js'
         ],
         compilers: {
@@ -12,6 +14,9 @@ module.exports = function (wallaby) {
         },
         env: {
             type: 'node'
+        },
+        delays: {
+            run: 3000
         }
     };
 };
