@@ -17,4 +17,30 @@ export default class MssqlSnapshot {
             }
         });
     }
+
+    create(snapshotName, connectionName = this.config.name, snapshotStoragePath = this.config.snapshotStoragePath) {
+        if (!snapshotName) throw new Error("No snapshot name supplied.");
+        const qualifiedPath = snapshotStoragePath + snapshotName;
+        return sql.execute(connectionName, {
+            query: sql.fromFile('./queries/createSnapshot.sql'),
+            params: {
+                query: {
+                    val: '',
+                    type: sql.VARCHAR(300)
+                },
+                sourceDbName: {
+                    val: this.config.database,
+                    type: sql.VARCHAR(50)
+                },
+                snapshotName: {
+                    val: snapshotName,
+                    type: sql.VARCHAR(50)
+                },
+                snapshotPath: {
+                    val: qualifiedPath,
+                    type: sql.VARCHAR(200)
+                }
+            }
+        });
+    }
 }
