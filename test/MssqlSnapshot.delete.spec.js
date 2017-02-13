@@ -3,7 +3,7 @@ chai.should();
 
 import MssqlSnapshot from '../src/MssqlSnapshot';
 import databaseConfig from '../src/databaseConfig'
-import { createSnapshot, deleteSnapshot } from './testUtilities';
+import {createSnapshot, deleteSnapshot} from './testUtilities';
 
 describe("when deleting a named sql snapshot", function() {
     let target = null;
@@ -16,7 +16,7 @@ describe("when deleting a named sql snapshot", function() {
     });
 });
 
-describe("when deleting a named sql snapshot with valid configuration", function(){
+describe("when deleting a named sql snapshot with valid configuration", function() {
     let target = null;
     const dbConfig = databaseConfig();
     const snapshotName = 'mssql-snapshot-testdb-when-deleting';
@@ -41,11 +41,11 @@ describe("when deleting a named sql snapshot with valid configuration", function
             }
         );
     });
-    it("it returns a success message once deleted", function(done){
+    it("it returns a success message once deleted", function(done) {
         target.delete(snapshotName).then(
             (result) => {
                 console.log(result);
-                result[0].should.eql({ Success: `${snapshotName} was successfully deleted.` });
+                result[0].should.eql({Success: `${snapshotName} was successfully deleted.`});
                 done();
             },
             (err) => {

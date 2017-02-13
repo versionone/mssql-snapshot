@@ -2,7 +2,7 @@ import chai from 'chai';
 
 chai.should();
 
-import { createSnapshot, deleteSnapshot } from './testUtilities';
+import {createSnapshot, deleteSnapshot} from './testUtilities';
 import databaseConfig from '../src/databaseConfig'
 import MssqlSnapshot from '../src/MssqlSnapshot';
 
@@ -24,14 +24,14 @@ describe("when retrieving a list of snapshots and the configuration is valid", f
         );
     });
     afterEach((done) => {
-       deleteSnapshot(snapshotName).then(
-           () => {
-               done();
-           },
-           (err) => {
-               done(err);
-           }
-       );
+        deleteSnapshot(snapshotName).then(
+            () => {
+                done();
+            },
+            (err) => {
+                done(err);
+            }
+        );
     });
     it("it returns one result", (done) => {
         target.listAll().then(
@@ -45,15 +45,15 @@ describe("when retrieving a list of snapshots and the configuration is valid", f
         );
     });
     it("it returns a result that contains the correct source database name", (done) => {
-       target.listAll().then(
-           (result) => {
+        target.listAll().then(
+            (result) => {
                 result[0].SourceDatabase.should.eql(dbConfig.database);
                 done();
-           },
-           (err) => {
+            },
+            (err) => {
                 done(err);
-           }
-       )
+            }
+        )
     });
     it("it returns a result that contains the correct date of creation", (done) => {
         target.listAll().then(
