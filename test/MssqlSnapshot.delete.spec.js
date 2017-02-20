@@ -16,6 +16,26 @@ describe("when deleting a named sql snapshot", function() {
     });
 });
 
+describe("when deleting a named sql snapshot that doesnt exist using valid configuration", function() {
+    let target = null;
+    const dbConfig = databaseConfig();
+    const missingSnapshot = "MissingSnapshot";
+    beforeEach(() => {
+        target = new MssqlSnapshot(dbConfig);
+    });
+    it("it returns an message indicating the source of the problem", function(done) {
+        target.delete(missingSnapshot).then(
+            (result) => {
+                result[0].should.eql({Failure: `When attempting to delete ${missingSnapshot}, the snapshot was not found.`});
+                done();
+            },
+            (err) => {
+                done(err);
+            }
+        );
+    });
+});
+
 describe("when deleting a named sql snapshot with valid configuration", function() {
     let target = null;
     const dbConfig = databaseConfig();
@@ -44,7 +64,6 @@ describe("when deleting a named sql snapshot with valid configuration", function
     it("it returns a success message once deleted", function(done) {
         target.delete(snapshotName).then(
             (result) => {
-                console.log(result);
                 result[0].should.eql({Success: `${snapshotName} was successfully deleted.`});
                 done();
             },
