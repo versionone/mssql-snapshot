@@ -66,4 +66,25 @@ export default class MssqlSnapshot {
             }
         });
     }
+
+    restore(snapshotName, connectionName = this.config.name) {
+        this._snapshotNameIsValid(snapshotName);
+        return sql.execute(connectionName, {
+            query: sql.fromFile('../src/queries/restoreSnapshot.sql'),
+            params: {
+                sourceDbName: {
+                    val: this.config.database,
+                    type: sql.VARCHAR(100)
+                },
+                snapshotName: {
+                    val: snapshotName,
+                    type: sql.VARCHAR(100)
+                },
+                query: {
+                    val: '',
+                    type: sql.VARCHAR(300)
+                }
+            }
+        });
+    }
 }
