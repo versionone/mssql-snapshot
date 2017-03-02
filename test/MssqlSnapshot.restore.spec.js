@@ -20,23 +20,24 @@ describe("when restoring from a snapshot that exists", function() {
     beforeEach((done) => {
         dbConfig = databaseConfig();
         target = new MssqlSnapshot(dbConfig);
-        createSnapshot(snapshotName).then(
-            () => {
-                done()
-            },
-            (err) => {
-                done(err);
-            }
-        );
+        function create() {
+            return createSnapshot(snapshotName).then(
+                () => {done()},
+                (err) => {done(err)}
+            );
+        }
+        function del() {
+            return deleteSnapshot(snapshotName).then(
+                () => {},
+                (err) => done(err)
+            );
+        }
+        del().then(create);
     });
     afterEach((done) => {
         deleteSnapshot(snapshotName).then(
-            () => {
-                done();
-            },
-            (err) => {
-                done(err);
-            }
+            () => done(),
+            (err) => done(err)
         );
     });
     it("it restores successfully", (done) => {
