@@ -6,7 +6,6 @@ module.exports = function (wallaby) {
             'test/testUtilities.js'
         ],
         tests: [
-            'src/queries/**/*.sql',
             'test/**/*spec.js'
         ],
         compilers: {
