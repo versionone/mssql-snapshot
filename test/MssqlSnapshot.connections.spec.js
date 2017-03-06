@@ -7,6 +7,7 @@ import MssqlSnapshot from '../src/MssqlSnapshot';
 import { createConnection } from './testUtilities';
 
 describe("when retrieving active connections to a db", function() {
+    this.timeout(15000);
     let target = null;
     beforeEach((done) => {
         createConnection().then(
