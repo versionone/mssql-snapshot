@@ -1,6 +1,7 @@
+USE MASTER;
 IF EXISTS(SELECT NULL FROM sys.databases WHERE [Name] = @snapshotName AND [source_database_id] IS NOT NULL)
 	BEGIN
-		SET @query = 'USE MASTER; RESTORE DATABASE [{sourceDbName}] FROM DATABASE_SNAPSHOT = ''{snapshotName}'';'
+		SET @query = 'RESTORE DATABASE [{sourceDbName}] FROM DATABASE_SNAPSHOT = ''{snapshotName}'';'
 		SET @query = REPLACE(@query, '{sourceDbName}', @sourceDbName);
 		SET @query = REPLACE(@query, '{snapshotName}', @snapshotName);
 		EXEC(@query);

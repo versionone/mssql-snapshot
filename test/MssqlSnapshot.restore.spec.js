@@ -42,8 +42,7 @@ describe("when restoring from a snapshot that exists", function() {
     });
     it("it restores successfully", (done) => {
         target.restore(snapshotName).then(
-            (result) => {
-                result.length.should.eql(1);
+            () => {
                 done();
             },
             (err) => {
