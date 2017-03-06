@@ -23,14 +23,21 @@ describe("when creating a named sql snapshot with valid configuration", function
     beforeEach(() => {
         target = new MssqlSnapshot(dbConfig);
     });
-    afterEach(() => {
-        deleteSnapshot(snapshotName);
+    afterEach((done) => {
+        deleteSnapshot(snapshotName).then(
+            () => {
+                done();
+            },
+            (err) => {
+                done(err);
+            }
+        );
     });
     it("it returns a success message once created", function(done) {
         target.create(snapshotName).then(
             (result) => {
                 result.length.should.eql(1);
-                result[0].should.eql({Success: `${snapshotName} was successfully created.`});
+                result.should.eql([{Success: `${snapshotName} was successfully created.`}]);
                 done();
             },
             (err) => {

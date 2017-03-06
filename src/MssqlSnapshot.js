@@ -7,6 +7,18 @@ export default class MssqlSnapshot {
         sql.addConnection(this.config);
     }
 
+    connections(connectionName = this.config.name) {
+        return sql.execute(connectionName, {
+            query: sql.fromFile('./queries/connections.sql'),
+            params: {
+                sourceDbName: {
+                    val: this.config.database,
+                    type: sql.NVARCHAR(50)
+                }
+            }
+        });
+    }
+
     listAll(connectionName = this.config.name) {
         return sql.execute(connectionName, {
             query: sql.fromFile('./queries/listSnapshots.sql'),
@@ -65,5 +77,44 @@ export default class MssqlSnapshot {
                 }
             }
         });
+    }
+
+    _setSingleUser(connectionName = this.config.name) {
+        return sql.execute(connectionName, {
+            query: `ALTER DATABASE [${this.config.database}] SET SINGLE_USER WITH ROLLBACK IMMEDIATE;`
+        });
+    }
+
+    _setMultiUser(connectionName = this.config.name) {
+        console.log('here');
+        return sql.execute(connectionName, {
+            query: `ALTER DATABASE [${this.config.database}] SET MULTI_USER;`
+        });
+    }
+
+    restore(snapshotName, connectionName = this.config.name) {
+        this._snapshotNameIsValid(snapshotName);
+        const restore = () => {
+            return sql.execute(connectionName, {
+                query: sql.fromFile('../src/queries/restoreSnapshot.sql'),
+                params: {
+                    snapshotName: {
+                        val: snapshotName,
+                        type: sql.VARCHAR(100)
+                    },
+                    query: {
+                        val: '',
+                        type: sql.VARCHAR(300)
+                    },
+                    sourceDbName: {
+                        val: this.config.database,
+                        type: sql.NVARCHAR(50)
+                    }
+                }
+            });
+        };
+        return this._setSingleUser(connectionName)
+            .then(restore)
+            .then(this._setMultiUser.bind(this, connectionName));
     }
 }
