@@ -86,7 +86,6 @@ export default class MssqlSnapshot {
     }
 
     _setMultiUser(connectionName = this.config.name) {
-        console.log('here');
         return sql.execute(connectionName, {
             query: `ALTER DATABASE [${this.config.database}] SET MULTI_USER;`
         });
