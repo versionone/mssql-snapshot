@@ -4,16 +4,16 @@ chai.should();
 
 import dbConfig from '../src/databaseConfig';
 import MssqlSnapshot from '../src/MssqlSnapshot';
-import { createConnection } from './testUtilities';
+import * as utility from './testUtilities';
 
 describe("when retrieving active connections to a db", function() {
     this.timeout(15000);
     let target = null;
     beforeEach((done) => {
-        createConnection().then(
-            () => done(),
-            (err) => done(err)
-        );
+        utility.killConnections()
+            .then(utility.createConnection)
+            .then(() => done())
+            .catch((err) => {done(err)});
         target = new MssqlSnapshot(dbConfig());
     });
     it("it returns an accurate list that doesn't include the current connection", (done) => {
