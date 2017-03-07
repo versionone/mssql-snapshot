@@ -81,7 +81,17 @@ export default class MssqlSnapshot {
 
     _setSingleUser(connectionName = this.config.name) {
         return sql.execute(connectionName, {
-            query: `ALTER DATABASE [${this.config.database}] SET SINGLE_USER WITH ROLLBACK IMMEDIATE;`
+            query: sql.fromFile('../src/queries/setSingleUser.sql'),
+            params: {
+                sourceDbName: {
+                    val: this.config.database,
+                    type: sql.VARCHAR(50)
+                },
+                query: {
+                    val: '',
+                    type: sql.VARCHAR(300)
+                }
+            }
         });
     }
 
