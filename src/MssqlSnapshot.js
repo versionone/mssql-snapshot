@@ -97,7 +97,17 @@ export default class MssqlSnapshot {
 
     _setMultiUser(connectionName = this.config.name) {
         return sql.execute(connectionName, {
-            query: `ALTER DATABASE [${this.config.database}] SET MULTI_USER;`
+            query: sql.fromFile('../src/queries/setMultiUser.sql'),
+            params: {
+                sourceDbName: {
+                    val: this.config.database,
+                    type: sql.VARCHAR(50)
+                },
+                query: {
+                    val: '',
+                    type: sql.VARCHAR(300)
+                }
+            }
         });
     }
 
