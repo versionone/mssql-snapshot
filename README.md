@@ -93,7 +93,7 @@ Next, take a look at the configuration file located in
 connection to the testing database.  Make any adjustments necessary
 to fit your environment.
 
-**IMPORTANT**:  See the configuration details below regarding the SQL Server service account configuration.  If the service
+**IMPORTANT**:  See the configuration details above regarding the SQL Server service account configuration.  If the service
 account does not have privileges to read/write from the path declared in
 ./src/databaseConfig.js *snapshotStoragePath*, the tests will fail with errors
  related to the fact.
