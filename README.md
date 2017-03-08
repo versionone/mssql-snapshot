@@ -54,4 +54,5 @@ This will allow SQL Server to write the files necessary to store the snapshots i
 the directory mentioned.  Without the proper privileges, the integration test will
 fail and the module will not be able to write the appropriate files to disk
 in order to successfully create snapshots and restore from them.  There are
-many different ways to accomplish this goal and if you need guidance.
+many different ways to accomplish this goal.  If you need guidance, see the
+following resource:  https://msdn.microsoft.com/en-us/library/ms143504.aspx
