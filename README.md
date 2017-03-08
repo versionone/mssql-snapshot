@@ -21,9 +21,40 @@ snapshot.listAll(); //list existing snapshots for the current database
 snapshot.connections(); //show existing connections to the current database excluding your own connection
 snapshot.create('my-new-snapshot');  //create a new snapshot of the current database
 snapshot.restore('my-existing-snapshot-name');  //restore from an existing snapshot
-snapshot.delete('my-old-snapshot'); //delete an existing
+snapshot.delete('my-old-snapshot'); //delete an existing snapshot by name
 ```
 
+##Examples
+Methods available on MssqlSnapshot.js are promise based, meaning, they
+can easily be chained together to achieve your goal of creating, deleting,
+or reading a list of available SQL snapshots in many different ways.
+
+As an example, you can choose to restore a snapshot only if there are no
+extraneous connections to the source database.
+```javascript
+import { config } from 'mssql-snapshot';
+import MssqlSnapshot from 'mssql-snapshot';
+
+const snapshot = new MssqlSnapshot(config());
+
+const getConnections = () => {
+	return snapshot.connections().then(
+	  (result) => if (results.length > 0) throw new Error('Connections exist!'),
+	  (err) => throw new Error(err)
+	);
+}
+
+const restoreSnapshot = () => {
+	return snapshot.restore('mySnapshotName').then(
+	  (result) => if (results.length > 0) throw new Error('Connections exist!'),
+	  (err) => throw new Error(err)
+	);
+}
+
+getConnections()
+	.then(restoreSnapshot)
+	.catch((err) => throw new Error(err));
+```
 
 ##Configuration
 
@@ -41,11 +72,14 @@ ways to accomplish this goal.  If you need guidance, see the
 following resource:  https://msdn.microsoft.com/en-us/library/ms143504.aspx
 
 ## Important notes about restoring from a snapshot
-When restoring from an existing snapshots, connections to the
-source database are killed by putting the database in single
-user mode in order to facilitate the restore.  After the restore
-completes, normally withing seconds,or if the restore fails,
-then the database is put back into multi-user mode.
+When restoring from an existing snapshots using the .restore() method,
+connections to the source database are killed by putting the
+database in single user mode in order to facilitate the restore.
+After the restore completes, normally withing seconds,
+or if the restore fails, then the database is put back into multi-user mode.
+The .connections() method can be used to manually check for existing connections
+to the database prior to restoring if you do not want to impact a production
+environment.
 
 ## Contributing
 If you'd like to contribute to the project, start by cloning the
