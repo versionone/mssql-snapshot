@@ -46,7 +46,7 @@ const getConnections = () => {
 
 const restoreSnapshot = () => {
 	return snapshot.restore('mySnapshotName').then(
-	  (result) => if (results.length > 0) throw new Error('Connections exist!'),
+	  (result) => return result,
 	  (err) => throw new Error(err)
 	);
 }
