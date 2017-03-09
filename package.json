@@ -5,9 +5,10 @@
   "main": "./lib/MssqlSnapshot.js",
   "scripts": {
     "test": "./node_modules/.bin/mocha --compilers js:babel-core/register --recursive",
-    "compile": "./node_modules/.bin/babel -d lib/ src/",
+	"clean": "rm -rf ./lib",
+    "compile": "./node_modules/.bin/babel -d lib/ src/ && cp -r src/queries lib/queries",
     "watch": "./node_modules/.bin/babel -d -w src/ --out-dir lib/",
-    "prepublish": "npm run compile"
+    "prepublish": "npm run clean && npm run compile && npm run test"
   },
   "repository": {
     "type": "git",
