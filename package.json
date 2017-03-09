@@ -1,8 +1,8 @@
 {
   "name": "mssql-snapshot",
   "version": "0.1.5",
-  "description": "An npm package for creating and restoring mssql snapshots.",
-  "main": "index.js",
+  "description": "An npm package for managing mssql snapshots.",
+  "main": "MssqlSnapshot.js",
   "scripts": {
     "test": "./node_modules/.bin/mocha --compilers js:babel-core/register --recursive",
     "compile": "./node_modules/.bin/babel -d lib/ src/",
