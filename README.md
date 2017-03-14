@@ -6,6 +6,40 @@ A node module for creating and restoring mssql database snapshots.
 For more information about snapshots, their purpose, and usage
 please visit [Microsofts documentation site](https://msdn.microsoft.com/en-us/library/ms175158(v=sql.110).aspx).
 
+## Configuration
+mssql-snapshot module is written using the 
+[seriate library](https://github.com/LeanKit-Labs/seriate) as a
+dependency and therefore can use any its documented configuration structures
+with the addition of a single property, `snapshotStoragePath`, to
+indicate where you'd like to store the files for your snapshots.  A
+typical configuration object can be constructed as such so that 
+snapshot files are stored in `c:\snapshots\`.
+
+```javascript
+{
+    name: 'mssql-snapshot-default',
+    snapshotStoragePath: 'c:\\snapshots\\',
+    user: 'mssqlTestUser',
+    password: 'chickenLips5000',
+    server: 'localhost',
+    database: 'mssql-snapshot-testdb',
+    pool: {
+        max: 10,
+        min: 0,
+        idleTimeoutMillis: 30000
+    }
+}    
+```
+In order to be able to create SQL snapshots by any method,
+standalone SQL script or otherwise, the service account that
+SQL Server service runs under must have read/write privileges
+to the local path mentioned on the *snapshotStoragePath* property
+in the configuration object.  This will allow SQL Server to
+write the files necessary to store the snapshots in
+the directory mentioned.  There are many different
+ways to accomplish this goal.  If you need guidance, see the
+following resource:  https://msdn.microsoft.com/en-us/library/ms143504.aspx
+
 ## Usage
 
 ```javascript
@@ -13,10 +47,23 @@ npm install mssql-snapshot
 ```
 
 ```javascript
-import { config } from 'mssql-snapshot';
 import MssqlSnapshot from 'mssql-snapshot';
 
-const snapshot = new MssqlSnapshot(config());
+const config = {
+    name: 'mssql-snapshot-default',
+    snapshotStoragePath: 'c:\\snapshots\\',
+    user: 'mssqlTestUser',
+    password: 'what_password',
+    server: 'localhost',
+    database: 'mssql-snapshot-testdb',
+    pool: {
+       max: 10,
+       min: 0,
+       idleTimeoutMillis: 30000
+    }
+}
+
+const snapshot = new MssqlSnapshot(config);
 snapshot.listAll(); //list existing snapshots for the current database
 snapshot.connections(); //show existing connections to the current database excluding your own connection
 snapshot.create('my-new-snapshot');  //create a new snapshot of the current database
@@ -56,21 +103,6 @@ getConnections()
 	.catch((err) => throw new Error(err));
 ```
 
-##Configuration
-
-In order to be able to create SQL snapshots by any method,
-standalone SQL script or otherwise, the service account that
-SQL Server service runs under must have read/write privileges
-to the local path mentioned on the *snapshotStoragePath* property
-in the databaseConfig.js file.  This will allow SQL Server to
-write the files necessary to store the snapshots in
-the directory mentioned.  Without the proper privileges, the
-integration test will fail and the module will not be able to
-write the appropriate files to disk in order to successfully
-create snapshots and restore from them.  There are many different
-ways to accomplish this goal.  If you need guidance, see the
-following resource:  https://msdn.microsoft.com/en-us/library/ms143504.aspx
-
 ## Important notes about restoring from a snapshot
 When restoring from an existing snapshots using the .restore() method,
 connections to the source database are killed by putting the
@@ -93,8 +125,9 @@ Next, take a look at the configuration file located in
 connection to the testing database.  Make any adjustments necessary
 to fit your environment.
 
-**IMPORTANT**:  See the configuration details above regarding the SQL Server service account configuration.  If the service
-account does not have privileges to read/write from the path declared in
-./src/databaseConfig.js *snapshotStoragePath*, the tests will fail with errors
- related to the fact.
+**IMPORTANT**:  See the configuration details above regarding the 
+SQL Server service account configuration.  If the service
+account does not have privileges to read/write from the path declared 
+in ./src/databaseConfig.js *snapshotStoragePath*, the tests will fail
+with errors related to the fact.
 
