@@ -3,9 +3,10 @@ import * as Parameters from './Parameters';
 
 export default class MssqlSnapshot {
 	constructor(config) {
-		if (!config) throw new Error("No configuration supplied to orchestrate the connection interface.");
+		if (!config) throw new Error('No configuration supplied to orchestrate the connection interface.');
 		this.config = config;
 
+		sql.setDefault(this.config);
 		sql.addConnection(this.config);
 	}
 
@@ -28,13 +29,14 @@ export default class MssqlSnapshot {
 	}
 
 	_snapshotNameIsValid(snapshotName) {
-		if (!snapshotName) throw new Error("No snapshot name supplied.");
+		if (!snapshotName) throw new Error('No snapshot name supplied.');
 		return true;
 	}
 
 	create(snapshotName, connectionName = this.config.name, snapshotStoragePath = this.config.snapshotStoragePath) {
 		this._snapshotNameIsValid(snapshotName);
 		const qualifiedPath = snapshotStoragePath + snapshotName;
+
 		return sql.execute(connectionName, {
 			query: sql.fromFile('./queries/createSnapshot.sql'),
 			params: {

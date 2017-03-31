@@ -11,7 +11,7 @@ export function createConnection() {
 
 export function killConnections() {
     const config = databaseConfig();
-    return sql.execute(config.name, {
+    return sql.execute(config, {
         query: sql.fromFile('../src/queries/killConnections.sql'),
         params: {
             sourceDbName: Parameters.sourceDbName,
@@ -22,8 +22,7 @@ export function killConnections() {
 
 export function deleteSnapshot(snapshotName) {
     const config = databaseConfig();
-    sql.addConnection(config);
-    return sql.execute(config.name, {
+    return sql.execute(config, {
         query: sql.fromFile('../src/queries/deleteSnapshot.sql'),
         params: {
             snapshotName: Parameters.snapshotName(snapshotName),
@@ -34,8 +33,7 @@ export function deleteSnapshot(snapshotName) {
 
 export function createSnapshot(snapshotName) {
     const config = databaseConfig();
-    sql.addConnection(config);
-    return sql.execute(config.name, {
+    return sql.execute(config, {
         query: sql.fromFile('../src/queries/createSnapshot.sql'),
         params: {
             query: Parameters.query,
