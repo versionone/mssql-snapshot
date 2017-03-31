@@ -1,7 +1,3 @@
-import chai from 'chai';
-
-chai.should();
-
 import {createSnapshot, deleteSnapshot} from './testUtilities';
 import databaseConfig from '../src/databaseConfig'
 import MssqlSnapshot from '../src/MssqlSnapshot';
@@ -10,54 +6,25 @@ describe("when retrieving a list of snapshots and the configuration is valid", f
     let target, dbConfig = null;
     const snapshotName = 'mssql-snapshot-testdb-when-retrieving-list';
     let snapshotCreationTime = null;
-    beforeEach((done) => {
+    beforeEach(() => {
         dbConfig = databaseConfig();
         target = new MssqlSnapshot(dbConfig);
-        createSnapshot(snapshotName).then(
-            () => {
-                snapshotCreationTime = new Date();
-                done()
-            },
-            (err) => {
-                done(err);
-            }
-        );
+        return createSnapshot(snapshotName).then(() => snapshotCreationTime = new Date());
     });
-    afterEach((done) => {
-        deleteSnapshot(snapshotName).then(
-            () => {
-                done();
-            },
-            (err) => {
-                done(err);
-            }
-        );
+
+    afterEach(() => deleteSnapshot(snapshotName));
+
+    it("it returns one result", () => {
+        target.listAll().should.eventually.have.length(1);
     });
-    it("it returns one result", (done) => {
-        target.listAll().then(
-            (result) => {
-                result.length.should.eql(1);
-                done();
-            },
-            (err) => {
-                done(err);
-            }
-        );
-    });
-    it("it returns a result that contains the correct source database name", (done) => {
-        target.listAll().then(
-            (result) => {
-                result[0].SourceDatabase.should.eql(dbConfig.database);
-                done();
-            },
-            (err) => {
-                done(err);
-            }
-        )
-    });
-	it("it returns a result that contains the correct date of creation", (done) => {
+
+    it("it returns a result that contains the correct source database name", () => {
+        return target.listAll().then((result) => result[0].SourceDatabase.should.eql(dbConfig.database))
+	});
+
+	it("it returns a result that contains the correct date of creation", () => {
 		this.timeout(15000);
-		target.listAll().then(
+		return target.listAll().then(
 			(result) => {
 				result[0].DateOfCreation.getDay().should.eql(snapshotCreationTime.getDay());
 				result[0].DateOfCreation.getYear().should.eql(snapshotCreationTime.getYear());
@@ -66,16 +33,12 @@ describe("when retrieving a list of snapshots and the configuration is valid", f
 				result[0].DateOfCreation.getHours().should.eql(snapshotCreationTime.getHours() - 4);
 				result[0].DateOfCreation.getMinutes().should.eql(snapshotCreationTime.getMinutes());
 				result[0].DateOfCreation.getSeconds().should.eql(snapshotCreationTime.getSeconds());
-				done();
-			},
-			(err) => {
-				done(err);
-			}
-		)
+			})
 	});
 });
 
 describe("when retrieving a list of snapshots and the configuration is invalid", function() {
+	this.timeout(10000);
     let target = null;
     beforeEach(function() {
         target = new MssqlSnapshot({

@@ -1,7 +1,3 @@
-import chai from 'chai';
-
-chai.should();
-
 import {createSnapshot, deleteSnapshot} from './testUtilities';
 import databaseConfig from '../src/databaseConfig'
 import MssqlSnapshot from '../src/MssqlSnapshot';
@@ -15,6 +11,7 @@ describe("when restoring and no snapshot name is supplied", function() {
 });
 
 describe("when restoring from a snapshot that exists", function() {
+	this.timeout(10000);
     let target, dbConfig = null;
     const snapshotName = 'mssql-snapshot-testdb-when-restoring';
     beforeEach((done) => {
@@ -34,20 +31,9 @@ describe("when restoring from a snapshot that exists", function() {
         }
         del().then(create);
     });
-    afterEach((done) => {
-        deleteSnapshot(snapshotName).then(
-            () => done(),
-            (err) => done(err)
-        );
-    });
-    it("it restores successfully", (done) => {
-        target.restore(snapshotName).then(
-            () => {
-                done();
-            },
-            (err) => {
-                done(err);
-            }
-        );
+    afterEach(() => deleteSnapshot(snapshotName));
+
+    it("it restores successfully", () => {
+        return target.restore(snapshotName);
     });
 });

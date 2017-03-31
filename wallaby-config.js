@@ -16,6 +16,11 @@ module.exports = function (wallaby) {
         },
         delays: {
             run: 3000
-        }
+        },
+		setup() {
+        	var chaiAsPromised = require('chai-as-promised');
+			chai.should();
+        	chai.use(chaiAsPromised);
+		}
     };
 };

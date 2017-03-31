@@ -1,7 +1,3 @@
-import chai from 'chai';
-
-chai.should();
-
 import MssqlSnapshot from '../src/MssqlSnapshot';
 
 describe("when retrieving a database object to perform queries", function() {
