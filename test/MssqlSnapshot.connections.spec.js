@@ -3,7 +3,6 @@ import MssqlSnapshot from '../src/MssqlSnapshot';
 import * as utility from './testUtilities';
 
 describe('when retrieving active connections to a db', function() {
-	this.timeout(15000);
 	let target = null;
 
 	beforeEach(() => {

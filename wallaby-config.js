@@ -17,12 +17,13 @@ module.exports = function(wallaby) {
 		delays: {
 			run: 3000
 		},
-		setup() {
+		setup(wallaby) {
 			var chaiAsPromised = require('chai-as-promised');
 			chai.should();
 			chai.use(chaiAsPromised);
+			var mocha = wallaby.testFramework;
+			mocha.timeout(10000);
 		},
-
 		workers: {
 			initial: 1,
 			regular: 1

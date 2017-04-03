@@ -14,8 +14,6 @@ describe('when creating a named sql snapshot', function() {
 });
 
 describe('when creating a named sql snapshot with valid configuration', function() {
-	this.timeout(5000);
-
 	let target = null;
 	const dbConfig = databaseConfig();
 	const snapshotName = 'mssql-snapshot-testdb-when-creating';

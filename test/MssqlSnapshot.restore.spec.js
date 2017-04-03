@@ -11,8 +11,6 @@ describe('when restoring and no snapshot name is supplied', function() {
 });
 
 describe('when restoring from a snapshot that exists', function() {
-	this.timeout(10000);
-
 	let target, dbConfig = null;
 	const snapshotName = 'mssql-snapshot-testdb-when-restoring';
 

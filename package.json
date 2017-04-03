@@ -4,7 +4,7 @@
   "description": "An npm package for managing mssql snapshots.",
   "main": "./lib/MssqlSnapshot.js",
   "scripts": {
-    "test": "./node_modules/.bin/mocha --compilers js:babel-core/register --require ./test/testHelper.js --recursive",
+    "test": "./node_modules/.bin/mocha --compilers js:babel-core/register --require ./test/testHelper.js --recursive --timeout 10000",
     "clean": "rm -rf ./lib",
     "compile": "./node_modules/.bin/babel -d lib/ src/ && cp -r src/queries lib/queries",
     "watch": "./node_modules/.bin/babel -d -w src/ --out-dir lib/",

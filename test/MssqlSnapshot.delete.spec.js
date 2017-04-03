@@ -25,8 +25,6 @@ describe("when deleting a named sql snapshot that doesnt exist using valid confi
 });
 
 describe("when deleting a named sql snapshot with valid configuration", function() {
-	this.timeout(5000);
-
     let target = null;
     const dbConfig = databaseConfig();
     const snapshotName = 'mssql-snapshot-testdb-when-deleting';
