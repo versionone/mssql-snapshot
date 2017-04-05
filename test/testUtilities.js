@@ -14,7 +14,7 @@ export function killConnections() {
     return sql.execute(config, {
         query: sql.fromFile('../src/queries/killConnections.sql'),
         params: {
-            sourceDbName: Parameters.sourceDbName,
+            sourceDbName: Parameters.sourceDbName(config.database),
             kill: sql.VARCHAR(8000),
         }
     });
@@ -37,9 +37,9 @@ export function createSnapshot(snapshotName) {
         query: sql.fromFile('../src/queries/createSnapshot.sql'),
         params: {
             query: Parameters.query,
-            sourceDbName: Parameters.sourceDbName,
+            sourceDbName: Parameters.sourceDbName(config.database),
             snapshotName: Parameters.snapshotName(snapshotName),
-            snapshotPath: Parameters.snapshotPath(snapshotName)
+            snapshotPath: Parameters.snapshotPath(snapshotName, config.snapshotStoragePath)
         }
     });
 }

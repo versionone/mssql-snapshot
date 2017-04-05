@@ -3,10 +3,12 @@ import databaseConfig from './databaseConfig';
 
 const config = databaseConfig();
 
-export const sourceDbName = {
-    val: config.database,
-    type: sql.NVARCHAR(50)
-};
+export function sourceDbName(value) {
+	return {
+		val: value,
+		type: sql.NVARCHAR(50)
+	};
+}
 
 export const query = {
     val: '',

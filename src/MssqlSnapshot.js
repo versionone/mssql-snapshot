@@ -14,7 +14,7 @@ export default class MssqlSnapshot {
 		return sql.execute(connectionName, {
 			query: sql.fromFile('./queries/connections.sql'),
 			params: {
-				sourceDbName: Parameters.sourceDbName
+				sourceDbName: Parameters.sourceDbName(this.config.database)
 			}
 		});
 	}
@@ -23,7 +23,7 @@ export default class MssqlSnapshot {
 		return sql.execute(connectionName, {
 			query: sql.fromFile('./queries/listSnapshots.sql'),
 			params: {
-				sourceDbName: Parameters.sourceDbName
+				sourceDbName: Parameters.sourceDbName(this.config.database)
 			}
 		});
 	}
@@ -41,7 +41,7 @@ export default class MssqlSnapshot {
 			query: sql.fromFile('./queries/createSnapshot.sql'),
 			params: {
 				query: Parameters.query,
-				sourceDbName: Parameters.sourceDbName,
+				sourceDbName: Parameters.sourceDbName(this.config.database),
 				snapshotName: Parameters.snapshotName(snapshotName),
 				snapshotPath: {
 					val: qualifiedPath,
@@ -66,7 +66,7 @@ export default class MssqlSnapshot {
 		return sql.execute(connectionName, {
 			query: sql.fromFile('../src/queries/setSingleUser.sql'),
 			params: {
-				sourceDbName: Parameters.sourceDbName,
+				sourceDbName: Parameters.sourceDbName(this.config.database),
 				query: Parameters.query
 			}
 		});
@@ -76,7 +76,7 @@ export default class MssqlSnapshot {
 		return sql.execute(connectionName, {
 			query: sql.fromFile('../src/queries/setMultiUser.sql'),
 			params: {
-				sourceDbName: Parameters.sourceDbName,
+				sourceDbName: Parameters.sourceDbName(this.config.database),
 				query: Parameters.query
 			}
 		});
@@ -90,7 +90,7 @@ export default class MssqlSnapshot {
 				params: {
 					snapshotName: Parameters.snapshotName(snapshotName),
 					query: Parameters.query,
-					sourceDbName: Parameters.sourceDbName
+					sourceDbName: Parameters.sourceDbName(this.config.database)
 				}
 			});
 		};
