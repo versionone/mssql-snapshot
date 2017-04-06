@@ -54,7 +54,7 @@ export default class MssqlSnapshot {
 	delete(snapshotName, connectionName = this.config.name) {
 		this._snapshotNameIsValid(snapshotName);
 		return sql.execute(connectionName, {
-			query: sql.fromFile('../src/queries/deleteSnapshot.sql'),
+			query: sql.fromFile('./queries/deleteSnapshot.sql'),
 			params: {
 				snapshotName: Parameters.snapshotName(snapshotName),
 				query: Parameters.query
@@ -64,7 +64,7 @@ export default class MssqlSnapshot {
 
 	_setSingleUser(connectionName = this.config.name) {
 		return sql.execute(connectionName, {
-			query: sql.fromFile('../src/queries/setSingleUser.sql'),
+			query: sql.fromFile('./queries/setSingleUser.sql'),
 			params: {
 				sourceDbName: Parameters.sourceDbName(this.config.database),
 				query: Parameters.query
@@ -74,7 +74,7 @@ export default class MssqlSnapshot {
 
 	_setMultiUser(connectionName = this.config.name) {
 		return sql.execute(connectionName, {
-			query: sql.fromFile('../src/queries/setMultiUser.sql'),
+			query: sql.fromFile('./queries/setMultiUser.sql'),
 			params: {
 				sourceDbName: Parameters.sourceDbName(this.config.database),
 				query: Parameters.query
@@ -86,7 +86,7 @@ export default class MssqlSnapshot {
 		this._snapshotNameIsValid(snapshotName);
 		const restore = () => {
 			return sql.execute(connectionName, {
-				query: sql.fromFile('../src/queries/restoreSnapshot.sql'),
+				query: sql.fromFile('./queries/restoreSnapshot.sql'),
 				params: {
 					snapshotName: Parameters.snapshotName(snapshotName),
 					query: Parameters.query,
