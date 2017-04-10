@@ -12,6 +12,6 @@ describe('when retrieving active connections to a db', function() {
 	});
 
 	it('it returns an accurate list that doesn\'t include the current connection', () => {
-		target.connections().should.eventually.have.length(0);
+		return target.connections().should.eventually.have.length(0);
 	});
 });

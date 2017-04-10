@@ -6,7 +6,6 @@ export default class MssqlSnapshot {
 		if (!config) throw new Error('No configuration supplied to orchestrate the connection interface.');
 		this.config = config;
 
-		sql.setDefault(this.config);
 		sql.addConnection(this.config);
 	}
 

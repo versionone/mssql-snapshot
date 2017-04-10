@@ -20,7 +20,7 @@ describe("when deleting a named sql snapshot that doesnt exist using valid confi
     beforeEach(() => target = new MssqlSnapshot(dbConfig));
 
     it("it returns an message indicating the source of the problem", function() {
-        target.delete(missingSnapshot).should.eventually.deep.equal([{Failure: `When attempting to delete ${missingSnapshot}, the snapshot was not found.`}]);
+        return target.delete(missingSnapshot).should.eventually.deep.equal([{Failure: `When attempting to delete ${missingSnapshot}, the snapshot was not found.`}]);
     });
 });
 
@@ -34,6 +34,6 @@ describe("when deleting a named sql snapshot with valid configuration", function
     });
 
     it("it returns a success message once deleted", function() {
-        target.delete(snapshotName).should.eventually.eql([{Success: `${snapshotName} was successfully deleted.`}]);
+        return target.delete(snapshotName).should.eventually.eql([{Success: `${snapshotName} was successfully deleted.`}]);
     });
 });
