@@ -93,8 +93,12 @@ export default class MssqlSnapshot {
 				}
 			});
 		};
-		return this._setSingleUser(connectionName)
-			.then(restore)
-			.then(this._setMultiUser.bind(this, connectionName));
+		return Promise.all(
+			[
+				this._setSingleUser(connectionName),
+				restore,
+				this._setMultiUser(connectionName)
+			]
+		);
 	}
 }

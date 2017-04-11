@@ -22,6 +22,6 @@ describe('when restoring from a snapshot that exists', function() {
 	afterEach(() => deleteSnapshot(snapshotName));
 
 	it('it restores successfully', () => {
-		return target.restore(snapshotName);
+		return target.restore(snapshotName).should.be.fulfilled;
 	});
 });
