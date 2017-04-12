@@ -61,44 +61,32 @@ export default class MssqlSnapshot {
 		});
 	}
 
-	_setSingleUser(connectionName = this.config.name) {
-		return sql.execute(connectionName, {
-			query: sql.fromFile('./queries/setSingleUser.sql'),
-			params: {
-				sourceDbName: Parameters.sourceDbName(this.config.database),
-				query: Parameters.query
-			}
-		});
-	}
-
-	_setMultiUser(connectionName = this.config.name) {
-		return sql.execute(connectionName, {
-			query: sql.fromFile('./queries/setMultiUser.sql'),
-			params: {
-				sourceDbName: Parameters.sourceDbName(this.config.database),
-				query: Parameters.query
-			}
-		});
-	}
-
 	restore(snapshotName, connectionName = this.config.name) {
 		this._snapshotNameIsValid(snapshotName);
-		const restore = () => {
-			return sql.execute(connectionName, {
-				query: sql.fromFile('./queries/restoreSnapshot.sql'),
+		const step1 = "killConnections", step2 = "restoreSnapshot";
+		return sql.getPlainContext(connectionName)
+			.step(step1, {
+				query: sql.fromFile('./queries/killConnections.sql'),
 				params: {
-					snapshotName: Parameters.snapshotName(snapshotName),
-					query: Parameters.query,
-					sourceDbName: Parameters.sourceDbName(this.config.database)
+					sourceDbName: Parameters.sourceDbName(this.config.database),
+					kill: sql.VARCHAR(8000),
 				}
+			})
+			.step(step2, (execute, data) => {
+				execute({
+					query: sql.fromFile('./queries/restoreSnapshot.sql'),
+					params: {
+						snapshotName: Parameters.snapshotName(snapshotName),
+						query: Parameters.query,
+						sourceDbName: Parameters.sourceDbName(this.config.database)
+					}
+				});
+			})
+			.end((results) => {
+				console.log(results);
+			})
+			.error((err) => {
+				console.log(err);
 			});
-		};
-		return Promise.all(
-			[
-				this._setSingleUser(connectionName),
-				restore,
-				this._setMultiUser(connectionName)
-			]
-		);
 	}
 }
