@@ -63,16 +63,15 @@ export default class MssqlSnapshot {
 
 	restore(snapshotName, connectionName = this.config.name) {
 		this._snapshotNameIsValid(snapshotName);
-		const step1 = "killConnections", step2 = "restoreSnapshot";
 		return sql.getPlainContext(connectionName)
-			.step(step1, {
+			.step("killConnections", {
 				query: sql.fromFile('./queries/killConnections.sql'),
 				params: {
 					sourceDbName: Parameters.sourceDbName(this.config.database),
 					kill: sql.VARCHAR(8000),
 				}
 			})
-			.step(step2, (execute, data) => {
+			.step("restoreSnapshot", (execute, data) => {
 				execute({
 					query: sql.fromFile('./queries/restoreSnapshot.sql'),
 					params: {
@@ -81,9 +80,6 @@ export default class MssqlSnapshot {
 						sourceDbName: Parameters.sourceDbName(this.config.database)
 					}
 				});
-			})
-			.end((results) => {
-				console.log(results);
 			})
 			.error((err) => {
 				console.log(err);
