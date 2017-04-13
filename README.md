@@ -114,6 +114,12 @@ to the database prior to restoring if you do not want to impact a production
 environment.
 
 ## Contributing
+Work in progress and defect tracking is handled via trello at:  https://trello.com/b/03NEIEfs/mssql-snapshot.
+If you find an issue, please use the trello board to see if it
+is currently being handled.  If its not, please let us know of the issue
+via trello, and also find the next priority card to pick up if
+you are a developer considering contributing to the project.
+
 If you'd like to contribute to the project, start by cloning the
 repository, launching Sql Server Management Studio, and executing
 the SQL script located in ./test/testSetup/createTestEnvironment.sql.
