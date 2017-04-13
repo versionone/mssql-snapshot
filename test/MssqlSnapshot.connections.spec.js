@@ -11,11 +11,7 @@ describe('when retrieving active connections to a db', function() {
 			.then(() => target = new MssqlSnapshot(dbConfig()));
 	});
 
-	it('it returns an accurate list that includes the current connection', () => {
-		return target.connections().should.eventually.have.length(1);
-	});
-
-	it('it returns an object with a set of expected properties', (done) => {
+	it('it returns an accurate list that includes the current connection', (done) => {
 		target.connections().then(
 			(result) => {
 				result[0].should.have.property('BlockedBy');
