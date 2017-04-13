@@ -1,9 +1,9 @@
-SELECT  spid,
-        sp.[status],
+SELECT  spid SPID,
+        sp.[status] Status,
         loginame [Login],
-        hostname,
-        blocked BlkBy,
-        sd.name DBName,
+        hostname HostName,
+        blocked BlockedBy,
+        sd.name DatabaseName,
         cmd Command,
         cpu CPUTime,
         physical_io DiskIO,
@@ -13,5 +13,4 @@ FROM master.dbo.sysprocesses sp
 	JOIN master.dbo.sysdatabases sd ON sp.dbid = sd.dbid
 WHERE
 	sd.name = @sourceDbName
-		AND spid != @@SPID
 ORDER BY spid
