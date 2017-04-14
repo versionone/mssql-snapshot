@@ -4,3 +4,4 @@ FROM sys.databases SourceDB
 INNER JOIN sys.databases SnapshotDB
     ON SourceDB.database_id = SnapshotDB.source_database_id
 WHERE SourceDB.[name] = @sourceDbName
+ORDER BY SnapshotDB.Create_Date DESC
