@@ -1,3 +1,5 @@
+import path from 'path';
+
 import sql from 'seriate';
 import * as Parameters from './Parameters';
 
@@ -30,6 +32,18 @@ export default class MssqlSnapshot {
 	_snapshotNameIsValid(snapshotName) {
 		if (!snapshotName) throw new Error('No snapshot name supplied.');
 		return true;
+	}
+
+	getSnapshotStoragePath(snapshotName, snapshotStoragePath = this.config.snapshotStoragePath) {
+		console.log(snapshotStoragePath);
+		if (snapshotStoragePath)
+			return Promise.resolve(path.join(snapshotStoragePath, snapshotName));
+		return sql.execute(this.config, {
+			query: sql.fromFile('./queries/getPhysicalPath.sql'),
+			params: {
+				sourceDbName: Parameters.sourceDbName(this.config.database),
+			}
+		}).then((result) => path.join(path.dirname(result[0].filename), snapshotName));
 	}
 
 	create(snapshotName, connectionName = this.config.name, snapshotStoragePath = this.config.snapshotStoragePath) {

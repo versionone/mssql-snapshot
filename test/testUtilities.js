@@ -1,12 +1,23 @@
 import sql from 'seriate';
 import databaseConfig from '../src/databaseConfig'
 import * as Parameters from '../src/Parameters';
+import path from 'path';
 
 export function createConnection() {
     const config = databaseConfig();
     return sql.execute(config.name, {
        query: `SELECT TABLE_NAME FROM [${config.database}].INFORMATION_SCHEMA.TABLES WHERE TABLE_TYPE = 'BASE TABLE'`
     });
+}
+
+export function getPhysicalPath(sourceDbName, snapshotName) {
+	const config = databaseConfig();
+	return sql.execute(config, {
+		query: sql.fromFile('../src/queries/getPhysicalPath.sql'),
+		params: {
+			sourceDbName: Parameters.sourceDbName(sourceDbName),
+		}
+	}).then((result) => path.join(path.dirname(result[0].filename), snapshotName));
 }
 
 export function killConnections() {
