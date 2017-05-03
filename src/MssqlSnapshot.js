@@ -35,7 +35,6 @@ export default class MssqlSnapshot {
 	}
 
 	getSnapshotStoragePath(snapshotName, snapshotStoragePath = this.config.snapshotStoragePath) {
-		console.log(snapshotStoragePath);
 		if (snapshotStoragePath)
 			return Promise.resolve(path.join(snapshotStoragePath, snapshotName));
 		return sql.execute(this.config, {
