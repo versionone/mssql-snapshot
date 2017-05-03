@@ -1,3 +1,5 @@
+import path from 'path';
+
 import sql from 'seriate';
 import * as Parameters from './Parameters';
 
@@ -32,22 +34,34 @@ export default class MssqlSnapshot {
 		return true;
 	}
 
+	getSnapshotStoragePath(snapshotName, snapshotStoragePath = this.config.snapshotStoragePath) {
+		if (snapshotStoragePath)
+			return Promise.resolve(path.join(snapshotStoragePath, snapshotName));
+		return sql.execute(this.config, {
+			query: sql.fromFile('./queries/getPhysicalPath.sql'),
+			params: {
+				sourceDbName: Parameters.sourceDbName(this.config.database),
+			}
+		}).then((result) => path.join(path.dirname(result[0].filename), snapshotName));
+	}
+
 	create(snapshotName, connectionName = this.config.name, snapshotStoragePath = this.config.snapshotStoragePath) {
 		this._snapshotNameIsValid(snapshotName);
-		const qualifiedPath = snapshotStoragePath + snapshotName;
-
-		return sql.execute(connectionName, {
-			query: sql.fromFile('./queries/createSnapshot.sql'),
-			params: {
-				query: Parameters.query,
-				sourceDbName: Parameters.sourceDbName(this.config.database),
-				snapshotName: Parameters.snapshotName(snapshotName),
-				snapshotPath: {
-					val: qualifiedPath,
-					type: sql.VARCHAR(200)
-				}
-			}
-		});
+		return this.getSnapshotStoragePath(snapshotName, snapshotStoragePath)
+			.then((storagePath) => {
+				return sql.execute(connectionName, {
+					query: sql.fromFile('./queries/createSnapshot.sql'),
+					params: {
+						query: Parameters.query,
+						sourceDbName: Parameters.sourceDbName(this.config.database),
+						snapshotName: Parameters.snapshotName(snapshotName),
+						snapshotPath: {
+							val: storagePath,
+							type: sql.VARCHARMAX
+						}
+					}
+				});
+			});
 	}
 
 	delete(snapshotName, connectionName = this.config.name) {

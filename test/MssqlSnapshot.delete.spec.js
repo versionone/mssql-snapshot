@@ -1,6 +1,6 @@
 import MssqlSnapshot from '../src/MssqlSnapshot';
 import databaseConfig from '../src/databaseConfig'
-import {createSnapshot, deleteSnapshot} from './testUtilities';
+import {createSnapshot, getPhysicalPath, deleteSnapshot} from './testUtilities';
 
 describe("when deleting a named sql snapshot", function() {
     let target = null;
@@ -30,8 +30,13 @@ describe("when deleting a named sql snapshot with valid configuration", function
     const snapshotName = 'mssql-snapshot-testdb-when-deleting';
     beforeEach(() => {
         target = new MssqlSnapshot(dbConfig);
-        return createSnapshot(snapshotName);
+        return getPhysicalPath(dbConfig.database, snapshotName)
+					.then((physicalPath) => {
+						return createSnapshot(snapshotName, physicalPath);
+					}
+		);
     });
+    afterEach(() => deleteSnapshot(snapshotName));
 
     it("it returns a success message once deleted", function() {
         return target.delete(snapshotName).should.eventually.eql([{Success: `${snapshotName} was successfully deleted.`}]);
