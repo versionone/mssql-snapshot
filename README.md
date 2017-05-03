@@ -18,7 +18,6 @@ snapshot files are stored in `c:\snapshots\`.
 ```javascript
 {
     name: 'mssql-snapshot-default',
-    snapshotStoragePath: 'c:\\snapshots\\',
     user: 'mssqlTestUser',
     password: 'chickenLips5000',
     server: 'localhost',
@@ -30,6 +29,12 @@ snapshot files are stored in `c:\snapshots\`.
     }
 }    
 ```
+By default snapshots are stored in the same physical director as
+the source database to reduce the need to configure permissions 
+on a separate folder.  Alternatively, you can configure a custom
+storage path by assigning a 'snapshotStoragePath' value at the
+root level in the config object passed in on construction (see above).
+
 In order to be able to create SQL snapshots by any method,
 standalone SQL script or otherwise, the service account that
 SQL Server service runs under must have read/write privileges
@@ -39,6 +44,9 @@ write the files necessary to store the snapshots in
 the directory mentioned.  There are many different
 ways to accomplish this goal.  If you need guidance, see the
 following resource:  https://msdn.microsoft.com/en-us/library/ms143504.aspx
+
+Also, you must make sure that TCP/IP protocol is enabled.  By default, this
+ protocol disabled on install.  For further details, please see:  https://docs.microsoft.com/en-us/sql/database-engine/configure-windows/enable-or-disable-a-server-network-protocol.
 
 ## Usage
 
@@ -51,7 +59,6 @@ import MssqlSnapshot from 'mssql-snapshot';
 
 const config = {
     name: 'mssql-snapshot-default',
-    snapshotStoragePath: 'c:\\snapshots\\',
     user: 'mssqlTestUser',
     password: 'what_password',
     server: 'localhost',
