@@ -20,20 +20,17 @@ describe('when creating a named sql snapshot with valid configuration', function
 	const dbConfig = databaseConfig();
 	const snapshotName = 'mssql-snapshot-testdb-when-creating';
 
-	beforeEach(() => target = new MssqlSnapshot(dbConfig));
+	beforeEach(() => {
+		target = new MssqlSnapshot(dbConfig);
+	});
 
 	afterEach(() => deleteSnapshot(snapshotName));
 
-	it('it returns a success message once created', function() {
+	it('it returns a success message once created and the snapshot file exists on disk', function() {
 		return target.create(snapshotName).then(result => {
 			result.length.should.eql(1);
 			result.should.eql([{Success: `${snapshotName} was successfully created.`}]);
-		});
-	});
-
-	it('it saves the snapshot file to the default location when none is specified', function() {
-		return target.create(snapshotName).then(() => {
-			getPhysicalPath(dbConfig.database, snapshotName).then(result => fs.existsSync(result).should.eql(true));
+			getPhysicalPath(dbConfig.database, snapshotName).then(filePath => fs.existsSync(filePath));
 		});
 	});
 
