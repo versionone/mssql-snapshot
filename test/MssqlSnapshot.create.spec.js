@@ -1,6 +1,8 @@
+import fs from 'fs';
+
 import MssqlSnapshot from '../src/MssqlSnapshot';
 import databaseConfig from '../src/databaseConfig';
-import {deleteSnapshot} from './testUtilities';
+import {deleteSnapshot, getPhysicalPath} from './testUtilities';
 
 describe('when creating a named sql snapshot', function() {
 	let target = null;
@@ -28,4 +30,11 @@ describe('when creating a named sql snapshot with valid configuration', function
 			result.should.eql([{Success: `${snapshotName} was successfully created.`}]);
 		});
 	});
+
+	it('it saves the snapshot file to the default location when none is specified', function() {
+		return target.create(snapshotName).then(() => {
+			getPhysicalPath(dbConfig.database, snapshotName).then(result => fs.existsSync(result).should.eql(true));
+		});
+	});
+
 });

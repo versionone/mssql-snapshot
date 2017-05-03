@@ -48,20 +48,21 @@ export default class MssqlSnapshot {
 
 	create(snapshotName, connectionName = this.config.name, snapshotStoragePath = this.config.snapshotStoragePath) {
 		this._snapshotNameIsValid(snapshotName);
-		const qualifiedPath = snapshotStoragePath + snapshotName;
-
-		return sql.execute(connectionName, {
-			query: sql.fromFile('./queries/createSnapshot.sql'),
-			params: {
-				query: Parameters.query,
-				sourceDbName: Parameters.sourceDbName(this.config.database),
-				snapshotName: Parameters.snapshotName(snapshotName),
-				snapshotPath: {
-					val: qualifiedPath,
-					type: sql.VARCHAR(200)
-				}
-			}
-		});
+		return this.getSnapshotStoragePath(snapshotName, snapshotStoragePath)
+			.then((storagePath) => {
+				return sql.execute(connectionName, {
+					query: sql.fromFile('./queries/createSnapshot.sql'),
+					params: {
+						query: Parameters.query,
+						sourceDbName: Parameters.sourceDbName(this.config.database),
+						snapshotName: Parameters.snapshotName(snapshotName),
+						snapshotPath: {
+							val: storagePath,
+							type: sql.VARCHARMAX
+						}
+					}
+				});
+			});
 	}
 
 	delete(snapshotName, connectionName = this.config.name) {

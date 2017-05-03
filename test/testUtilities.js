@@ -42,7 +42,7 @@ export function deleteSnapshot(snapshotName) {
     });
 }
 
-export function createSnapshot(snapshotName) {
+export function createSnapshot(snapshotName, snapshotStoragePath) {
     const config = databaseConfig();
     return sql.execute(config, {
         query: sql.fromFile('../src/queries/createSnapshot.sql'),
@@ -50,7 +50,7 @@ export function createSnapshot(snapshotName) {
             query: Parameters.query,
             sourceDbName: Parameters.sourceDbName(config.database),
             snapshotName: Parameters.snapshotName(snapshotName),
-            snapshotPath: Parameters.snapshotPath(snapshotName, config.snapshotStoragePath)
+            snapshotPath: Parameters.snapshotPath(snapshotStoragePath)
         }
     });
 }

@@ -22,9 +22,9 @@ export function snapshotName(snapshotName) {
     };
 }
 
-export function snapshotPath(snapshotName) {
+export function snapshotPath(snapshotStoragePath) {
     return {
-        val: config.snapshotStoragePath + snapshotName,
+        val: snapshotStoragePath,
         type: sql.VARCHAR(200)
     };
 }
