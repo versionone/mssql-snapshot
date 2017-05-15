@@ -2,12 +2,21 @@ import sql from 'seriate';
 import databaseConfig from '../src/databaseConfig'
 import * as Parameters from '../src/Parameters';
 import path from 'path';
+import fs from 'fs';
 
 export function createConnection() {
     const config = databaseConfig();
     return sql.execute(config.name, {
        query: `SELECT 1`
     });
+}
+
+export function fileExists(filePath) {
+	return new Promise((resolve, reject) => {
+		fs.access(filePath, fs.F_OK, (error) => {
+			resolve(!error);
+		});
+	});
 }
 
 export function getPhysicalPath(sourceDbName, snapshotName) {
