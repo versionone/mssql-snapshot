@@ -30,7 +30,7 @@ describe('when creating a named sql snapshot with valid configuration', function
 		return target.create(snapshotName).then(result => {
 			result.length.should.eql(1);
 			result.should.eql([{Success: `${snapshotName} was successfully created.`}]);
-			getPhysicalPath(dbConfig.database, snapshotName).then(filePath => fs.existsSync(filePath));
+			getPhysicalPath(dbConfig.database, snapshotName).then(filePath => fs.existsSync(filePath).should.eql(true));
 		});
 	});
 
