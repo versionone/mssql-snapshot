@@ -6,7 +6,7 @@ import path from 'path';
 export function createConnection() {
     const config = databaseConfig();
     return sql.execute(config.name, {
-       query: `SELECT 1 as 'Connection'`
+       query: `SELECT 1`
     });
 }
 
@@ -45,9 +45,9 @@ export function killConnections() {
 export function bringOnline() {
 	const config = databaseConfig();
 	return sql.execute(config, {
-		query: sql.fromFile('../src/queries/bringOnly.sql'),
+		query: sql.fromFile('../src/queries/bringOnline.sql'),
 		params: {
-			sourceDbName: Parameters.sourceDbName(this.config.database),
+			sourceDbName: Parameters.sourceDbName(config.database),
 			query: Parameters.query,
 		}
 	});
