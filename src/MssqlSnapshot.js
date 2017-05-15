@@ -78,11 +78,18 @@ export default class MssqlSnapshot {
 	restore(snapshotName, connectionName = this.config.name) {
 		this._snapshotNameIsValid(snapshotName);
 		return sql.getPlainContext(connectionName)
-			.step("killConnections", {
-				query: sql.fromFile('./queries/killConnections.sql'),
+			.step("bringOffline", {
+				query: sql.fromFile('./queries/bringOffline.sql'),
 				params: {
 					sourceDbName: Parameters.sourceDbName(this.config.database),
-					kill: sql.VARCHAR(8000),
+					query: Parameters.query,
+				}
+			})
+			.step("bringOnline", {
+				query: sql.fromFile('./queries/bringOnline.sql'),
+				params: {
+					sourceDbName: Parameters.sourceDbName(this.config.database),
+					query: Parameters.query,
 				}
 			})
 			.step("restoreSnapshot", (execute, data) => {
