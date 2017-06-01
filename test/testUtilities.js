@@ -19,14 +19,11 @@ export function fileExists(filePath) {
 	});
 }
 
-export function getPhysicalPath(sourceDbName, snapshotName) {
+export function getDbMeta(snapshotName) {
 	const config = databaseConfig();
 	return sql.execute(config, {
-		query: sql.fromFile('../src/queries/getPhysicalPath.sql'),
-		params: {
-			sourceDbName: Parameters.sourceDbName(sourceDbName),
-		}
-	}).then((result) => path.join(path.dirname(result[0].filename), snapshotName));
+		query: sql.fromFile('../src/queries/getDbMeta.sql'),
+	}).then((result) => path.join(path.dirname(result[0].PhysicalName), snapshotName));
 }
 
 export function killConnections() {

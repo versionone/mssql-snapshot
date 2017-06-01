@@ -1,4 +1,4 @@
-import {createSnapshot, deleteSnapshot, getPhysicalPath} from './testUtilities';
+import {createSnapshot, deleteSnapshot, getDbMeta} from './testUtilities';
 import databaseConfig from '../src/databaseConfig';
 import MssqlSnapshot from '../src/MssqlSnapshot';
 
@@ -10,7 +10,7 @@ describe('when retrieving a list of snapshots and the configuration is valid', f
 	beforeEach(() => {
 		dbConfig = databaseConfig();
 		target = new MssqlSnapshot(dbConfig);
-		return getPhysicalPath(dbConfig.database, snapshotName)
+		return getDbMeta(snapshotName)
 			.then((physicalPath) => {
 					return createSnapshot(snapshotName, physicalPath)
 						.then(() => snapshotCreationTime = new Date())

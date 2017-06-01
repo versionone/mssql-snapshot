@@ -34,20 +34,17 @@ export default class MssqlSnapshot {
 		return true;
 	}
 
-	getSnapshotStoragePath(snapshotName, snapshotStoragePath = this.config.snapshotStoragePath) {
+	getDbMeta(snapshotName, snapshotStoragePath = this.config.snapshotStoragePath) {
 		if (snapshotStoragePath)
 			return Promise.resolve(path.join(snapshotStoragePath, snapshotName));
 		return sql.execute(this.config, {
-			query: sql.fromFile('./queries/getPhysicalPath.sql'),
-			params: {
-				sourceDbName: Parameters.sourceDbName(this.config.database),
-			}
-		}).then((result) => path.join(path.dirname(result[0].filename), snapshotName));
+			query: sql.fromFile('./queries/getDbMeta.sql'),
+		}).then((result) => path.join(path.dirname(result[0].PhysicalName), snapshotName));
 	}
 
 	create(snapshotName, connectionName = this.config.name, snapshotStoragePath = this.config.snapshotStoragePath) {
 		this._snapshotNameIsValid(snapshotName);
-		return this.getSnapshotStoragePath(snapshotName, snapshotStoragePath)
+		return this.getDbMeta(snapshotName, snapshotStoragePath)
 			.then((storagePath) => {
 				return sql.execute(connectionName, {
 					query: sql.fromFile('./queries/createSnapshot.sql'),
