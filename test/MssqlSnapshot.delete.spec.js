@@ -30,10 +30,8 @@ describe("when deleting a named sql snapshot with valid configuration", function
     const snapshotName = 'mssql-snapshot-testdb-when-deleting';
     beforeEach(() => {
         target = new MssqlSnapshot(dbConfig);
-        return getDbMeta(dbConfig.database, snapshotName)
-					.then((physicalPath) => {
-						return createSnapshot(snapshotName, physicalPath);
-					}
+        return getDbMeta(snapshotName)
+					.then((result) => createSnapshot(snapshotName, result.LogicalName, result.PhysicalName)
 		);
     });
     afterEach(() => deleteSnapshot(snapshotName));

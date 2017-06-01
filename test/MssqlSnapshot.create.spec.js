@@ -27,8 +27,8 @@ describe('when creating a named sql snapshot with valid configuration', function
 	afterEach(() => deleteSnapshot(snapshotName));
 
 	it('the snapshot file exists on disk', function() {
-		return getDbMeta(dbConfig.database, snapshotName).then(filePath => {
-			return fileExists(filePath).should.eventually.eql(true);
+		return getDbMeta(snapshotName).then((result) => {
+			return fileExists(result.PhysicalName).should.eventually.eql(true);
 		});
 	});
 

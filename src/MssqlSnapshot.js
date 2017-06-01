@@ -35,25 +35,31 @@ export default class MssqlSnapshot {
 	}
 
 	getDbMeta(snapshotName, snapshotStoragePath = this.config.snapshotStoragePath) {
-		if (snapshotStoragePath)
-			return Promise.resolve(path.join(snapshotStoragePath, snapshotName));
 		return sql.execute(this.config, {
 			query: sql.fromFile('./queries/getDbMeta.sql'),
-		}).then((result) => path.join(path.dirname(result[0].PhysicalName), snapshotName));
+			params: {
+				query: Parameters.query,
+				sourceDbName: Parameters.sourceDbName(this.config.database),
+			}
+		}).then((result) => ({
+			PhysicalName: snapshotStoragePath ? path.join(snapshotStoragePath, snapshotName) : path.join(path.dirname(result[0].PhysicalName), snapshotName),
+			LogicalName: result[0].LogicalName,
+        }));
 	}
 
 	create(snapshotName, connectionName = this.config.name, snapshotStoragePath = this.config.snapshotStoragePath) {
 		this._snapshotNameIsValid(snapshotName);
 		return this.getDbMeta(snapshotName, snapshotStoragePath)
-			.then((storagePath) => {
+			.then((dbMeta) => {
 				return sql.execute(connectionName, {
 					query: sql.fromFile('./queries/createSnapshot.sql'),
 					params: {
 						query: Parameters.query,
 						sourceDbName: Parameters.sourceDbName(this.config.database),
 						snapshotName: Parameters.snapshotName(snapshotName),
+						logicalName: Parameters.logicalName(dbMeta.LogicalName),
 						snapshotPath: {
-							val: storagePath,
+							val: dbMeta.PhysicalName,
 							type: sql.VARCHARMAX
 						}
 					}

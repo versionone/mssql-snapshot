@@ -11,21 +11,22 @@ describe('when retrieving a list of snapshots and the configuration is valid', f
 		dbConfig = databaseConfig();
 		target = new MssqlSnapshot(dbConfig);
 		return getDbMeta(snapshotName)
-			.then((physicalPath) => {
-					return createSnapshot(snapshotName, physicalPath)
-						.then(() => snapshotCreationTime = new Date())
-				}
-			);
+			.then((result) => {
+				return createSnapshot(snapshotName, result.LogicalName, result.PhysicalName)
+					.then(() => snapshotCreationTime = new Date());
+			});
 	});
 
 	afterEach(() => deleteSnapshot(snapshotName));
 
 	it('it returns one result', () => {
-		return target.listAll().should.eventually.have.length(1);
+		return target.listAll()
+			.should.eventually.have.length(1);
 	});
 
 	it('it returns a result that contains the correct source database name', () => {
-		return target.listAll().then((result) => result[0].SourceDatabase.should.eql(dbConfig.database));
+		return target.listAll()
+			.then((result) => result[0].SourceDatabase.should.eql(dbConfig.database));
 	});
 
 	it('it returns a result that contains the correct date of creation', () => {

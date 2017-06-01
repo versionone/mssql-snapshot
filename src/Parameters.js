@@ -22,6 +22,13 @@ export function snapshotName(snapshotName) {
     };
 }
 
+export function logicalName(logicalName) {
+	return {
+		val: logicalName,
+		type: sql.VARCHAR(100)
+	};
+}
+
 export function snapshotPath(snapshotStoragePath) {
     return {
         val: snapshotStoragePath,

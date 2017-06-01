@@ -4,7 +4,7 @@ import MssqlSnapshot from '../src/MssqlSnapshot';
 import databaseConfig from '../src/databaseConfig';
 import {getDbMeta} from './testUtilities';
 
-describe('when retrieving the storage path for a snapshot', function() {
+describe('when retrieving database meta for a snapshot', function() {
 	let targetWithSnapshotStoragePath, configWithSnapshotStoragePath, defaultTarget, expectedUnconfiguredPath, expectedConfiguredPath = null;
 	const snapshotName = 'mssql-snapshot-testdb-get-path';
 
@@ -18,7 +18,7 @@ describe('when retrieving the storage path for a snapshot', function() {
 
 	it('it returns the path defined in config if one is present', function() {
 		return targetWithSnapshotStoragePath.getDbMeta(snapshotName, configWithSnapshotStoragePath.snapshotStoragePath)
-			.should.eventually.equal(expectedConfiguredPath);
+			.should.eventually.have.property("PhysicalName", path.join(configWithSnapshotStoragePath.snapshotStoragePath, snapshotName));
 	});
 
 	it('it returns the path that the source db is stored in if no storage path is defined', function() {

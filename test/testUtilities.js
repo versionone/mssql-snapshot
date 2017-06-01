@@ -23,7 +23,16 @@ export function getDbMeta(snapshotName) {
 	const config = databaseConfig();
 	return sql.execute(config, {
 		query: sql.fromFile('../src/queries/getDbMeta.sql'),
-	}).then((result) => path.join(path.dirname(result[0].PhysicalName), snapshotName));
+		params: {
+			query: Parameters.query,
+			sourceDbName: Parameters.sourceDbName(config.database),
+		}
+	}).then((result) => {
+		return ({
+			PhysicalName: path.join(path.dirname(result[0].PhysicalName), snapshotName),
+			LogicalName: result[0].LogicalName,
+		});
+	});
 }
 
 export function killConnections() {
@@ -70,15 +79,16 @@ export function deleteSnapshot(snapshotName) {
     });
 }
 
-export function createSnapshot(snapshotName, snapshotStoragePath) {
+export function createSnapshot(snapshotName, logicalName, snapshotStoragePath) {
     const config = databaseConfig();
     return sql.execute(config, {
         query: sql.fromFile('../src/queries/createSnapshot.sql'),
         params: {
             query: Parameters.query,
             sourceDbName: Parameters.sourceDbName(config.database),
+			logicalName: Parameters.logicalName(logicalName),
             snapshotName: Parameters.snapshotName(snapshotName),
-            snapshotPath: Parameters.snapshotPath(snapshotStoragePath)
+            snapshotPath: Parameters.snapshotPath(snapshotStoragePath || config.snapshotStoragePath)
         }
     });
 }
