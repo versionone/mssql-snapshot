@@ -16,7 +16,7 @@ export default class MssqlSnapshot {
 				sql.addConnection(this.config);
 				this.connected = true;
 				resolve(`connection added: ${this.config.name}.`);
-			reject(`already connected with: ${this.config.name}`);
+			resolve(`already connected with: ${this.config.name}`);
 		});
 	}
 	connections() {
