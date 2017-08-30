@@ -12,10 +12,11 @@ export default class MssqlSnapshot {
 
 	connect() {
 		return new Promise((resolve, reject) => {
-			if (!this.connected)
+			if (!this.connected) {
 				sql.addConnection(this.config);
 				this.connected = true;
 				resolve(`connection added: ${this.config.name}.`);
+			}
 			resolve(`already connected with: ${this.config.name}`);
 		});
 	}
