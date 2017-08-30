@@ -7,12 +7,25 @@ export default class MssqlSnapshot {
 	constructor(config) {
 		if (!config) throw new Error('No configuration supplied to orchestrate the connection interface.');
 		this.config = config;
-
-		sql.addConnection(this.config);
+		this.connected = false;
 	}
 
-	connections(connectionName = this.config.name) {
-		return sql.execute(connectionName, {
+	connect() {
+		return new Promise((resolve, reject) => {
+			if (!this.connected)
+				sql.addConnection(this.config);
+				this.connected = true;
+				resolve(`connection added: ${this.config.name}.`);
+			reject(`already connected with: ${this.config.name}`);
+		});
+	}
+	connections() {
+		return this.connect()
+			.then(() => this._connections());
+	}
+
+	_connections() {
+		return sql.execute(this.config.name, {
 			query: sql.fromFile('./queries/connections.sql'),
 			params: {
 				sourceDbName: Parameters.sourceDbName(this.config.database)
@@ -20,8 +33,13 @@ export default class MssqlSnapshot {
 		});
 	}
 
-	listAll(connectionName = this.config.name) {
-		return sql.execute(connectionName, {
+	listAll() {
+		return this.connect()
+			.then(() => this._listAll())
+	}
+
+	_listAll() {
+		return sql.execute(this.config.name, {
 			query: sql.fromFile('./queries/listSnapshots.sql'),
 			params: {
 				sourceDbName: Parameters.sourceDbName(this.config.database)
@@ -29,12 +47,17 @@ export default class MssqlSnapshot {
 		});
 	}
 
-	_snapshotNameIsValid(snapshotName) {
+	static _snapshotNameIsValid(snapshotName) {
 		if (!snapshotName) throw new Error('No snapshot name supplied.');
 		return true;
 	}
 
 	getDbMeta(snapshotName, snapshotStoragePath = this.config.snapshotStoragePath) {
+		return this.connect()
+			.then(() => this._getDbMeta(snapshotName, snapshotStoragePath))
+	}
+
+	_getDbMeta(snapshotName, snapshotStoragePath) {
 		return sql.execute(this.config, {
 			query: sql.fromFile('./queries/getDbMeta.sql'),
 			params: {
@@ -47,11 +70,16 @@ export default class MssqlSnapshot {
         }));
 	}
 
-	create(snapshotName, connectionName = this.config.name, snapshotStoragePath = this.config.snapshotStoragePath) {
-		this._snapshotNameIsValid(snapshotName);
+	create(snapshotName, snapshotStoragePath = this.config.snapshotStoragePath) {
+		MssqlSnapshot._snapshotNameIsValid(snapshotName);
+		return this.connect()
+			.then(() => this._create(snapshotName, snapshotStoragePath))
+	}
+
+	_create(snapshotName, snapshotStoragePath) {
 		return this.getDbMeta(snapshotName, snapshotStoragePath)
 			.then((dbMeta) => {
-				return sql.execute(connectionName, {
+				return sql.execute(this.config.name, {
 					query: sql.fromFile('./queries/createSnapshot.sql'),
 					params: {
 						query: Parameters.query,
@@ -67,9 +95,14 @@ export default class MssqlSnapshot {
 			});
 	}
 
-	delete(snapshotName, connectionName = this.config.name) {
-		this._snapshotNameIsValid(snapshotName);
-		return sql.execute(connectionName, {
+	delete(snapshotName) {
+		MssqlSnapshot._snapshotNameIsValid(snapshotName);
+		return this.connect()
+			.then(() => this._delete(snapshotName));
+	}
+
+	_delete(snapshotName) {
+		return sql.execute(this.config.name, {
 			query: sql.fromFile('./queries/deleteSnapshot.sql'),
 			params: {
 				snapshotName: Parameters.snapshotName(snapshotName),
@@ -78,9 +111,14 @@ export default class MssqlSnapshot {
 		});
 	}
 
-	restore(snapshotName, connectionName = this.config.name) {
-		this._snapshotNameIsValid(snapshotName);
-		return sql.getPlainContext(connectionName)
+	restore(snapshotName) {
+		MssqlSnapshot._snapshotNameIsValid(snapshotName);
+		return this.connect()
+			.then(() => this._restore(snapshotName));
+	}
+
+	_restore(snapshotName) {
+		return sql.getPlainContext(this.config.name)
 			.step("bringOffline", {
 				query: sql.fromFile('./queries/bringOffline.sql'),
 				params: {

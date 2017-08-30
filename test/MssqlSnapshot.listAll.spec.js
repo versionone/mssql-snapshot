@@ -49,6 +49,6 @@ describe('when retrieving a list of snapshots and the configuration is invalid',
 	beforeEach(() => target = new MssqlSnapshot({name: 'fakeConnection'}));
 
 	it('it returns a proper error', () => {
-		target.listAll('fakeConnection').should.be.rejectedWith('SqlContext Error. Failed on step "connecting" with: "No connection named "fakeConnection" exists"');
+		target.listAll('fakeConnection').should.be.rejectedWith('No connection is specified for that request.');
 	});
 });
