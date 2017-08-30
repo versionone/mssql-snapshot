@@ -21,7 +21,7 @@ describe('when creating a named sql snapshot with valid configuration', function
 
 	beforeEach(() => {
 		let target = new MssqlSnapshot(dbConfig);
-		return Promise.all([target.create(snapshotName)]);
+		return target.create(snapshotName);
 	});
 
 	afterEach(() => deleteSnapshot(snapshotName));
