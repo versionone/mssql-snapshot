@@ -3,7 +3,8 @@ module.exports = function(wallaby) {
 		files: [
 			'src/**/*.js',
 			'src/queries/**/*.sql',
-			'test/testUtilities.js'
+			'test/testUtilities.js',
+			'test/testHelper.js',
 		],
 		tests: [
 			'test/**/*spec.js'
@@ -17,11 +18,10 @@ module.exports = function(wallaby) {
 		delays: {
 			run: 3000
 		},
-		setup(wallaby) {
-			var chaiAsPromised = require('chai-as-promised');
-			chai.should();
-			chai.use(chaiAsPromised);
-			var mocha = wallaby.testFramework;
+		setup(w) {
+			const path = require('path');
+			require(path.join(w.localProjectDir,'test', 'testHelper'));
+			var mocha = w.testFramework;
 			mocha.timeout(10000);
 		},
 		workers: {
