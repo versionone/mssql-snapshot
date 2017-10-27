@@ -50,12 +50,12 @@ Also, you must make sure that TCP/IP protocol is enabled.  By default, this
 
 ## Usage
 
-```javascript
+```bash
 npm install mssql-snapshot
 ```
 
 ```javascript
-import MssqlSnapshot from 'mssql-snapshot';
+import createSnapshotter from 'mssql-snapshot';
 
 const config = {
     name: 'mssql-snapshot-default',
@@ -70,53 +70,46 @@ const config = {
     }
 }
 
-const snapshot = new MssqlSnapshot(config);
-snapshot.listAll(); //list existing snapshots for the current database
-snapshot.connections(); //show existing connections to the current database excluding your own connection
-snapshot.create('my-new-snapshot');  //create a new snapshot of the current database
-snapshot.restore('my-existing-snapshot-name');  //restore from an existing snapshot
-snapshot.delete('my-old-snapshot'); //delete an existing snapshot by name
+const snapshotter = createSnapshotter(config);
+snapshotter(api => {
+	api.listAll(); //list existing snapshots for the current database
+    api.connections(); //show existing connections to the current database excluding your own connection
+    api.create('my-new-snapshot');  //create a new snapshot of the current database
+    api.restore('my-existing-snapshot-name');  //restore from an existing snapshot
+    api.delete('my-old-snapshot'); //delete an existing snapshot by name
+});
 ```
 
-##Examples
-Methods available on MssqlSnapshot.js are promise based, meaning, they
-can easily be chained together to achieve your goal of creating, deleting,
-or reading a list of available SQL snapshots in many different ways.
+## Examples
+First you must create a snapshotter with a valid configuration object. Below we create a default one from the mssql-snapshot library itself.
 
-As an example, you can choose to restore a snapshot only if there are no
-extraneous connections to the source database.
+The snapshotter is invoked with a callback that provides access to the snapshotting API. Any commands issued from the API within this callback are **executed on the same connection**. The snapshotter will **automatically connect** to the database, invoke your callback, and **automatically close the connection** afterwards.
+
+Each API function and the snapshotter invocation returns a Promise.
+
 ```javascript
-import { config } from 'mssql-snapshot';
-import MssqlSnapshot from 'mssql-snapshot';
+import createSnapshotter, { config } from 'mssql-snapshot';
 
-const snapshot = new MssqlSnapshot(config());
-
-const getConnections = () => {
-	return snapshot.connections().then(
-	  (result) => if (results.length > 0) throw new Error('Connections exist!'),
-	  (err) => throw new Error(err)
-	);
-}
-
-const restoreSnapshot = () => {
-	return snapshot.restore('mySnapshotName').then(
-	  (result) => return result,
-	  (err) => throw new Error(err)
-	);
-}
-
-getConnections()
-	.then(restoreSnapshot)
-	.catch((err) => throw new Error(err));
+const snapshot = createSnapshotter(config());
+snapshot(api => 
+    Promise.all([ 
+        api.connections()
+            .then(console.log),
+        
+        api.create('mySnapShot')
+            .then(() => api.restore('mySnapshot'))
+            .then(() => api.delete('mySnapshot')),
+    ])
+);
 ```
 
 ## Important notes about restoring from a snapshot
-When restoring from an existing snapshots using the .restore() method,
+When restoring from an existing snapshots using the `.restore()` method,
 connections to the source database are killed by putting the
 database in single user mode in order to facilitate the restore.
 After the restore completes, normally withing seconds,
 or if the restore fails, then the database is put back into multi-user mode.
-The .connections() method can be used to manually check for existing connections
+The `.connections()` method can be used to manually check for existing connections
 to the database prior to restoring if you do not want to impact a production
 environment.
 
@@ -129,18 +122,18 @@ you are a developer considering contributing to the project.
 
 If you'd like to contribute to the project, start by cloning the
 repository, launching Sql Server Management Studio, and executing
-the SQL script located in ./test/testSetup/createTestEnvironment.sql.
+the SQL script located in `./test/testSetup/createTestEnvironment.sql`.
 This will create a database and user for the integration tests to
 run with.
 
 Next, take a look at the configuration file located in
-./src/databaseConfig.js. This file is key to configuring your
+`./src/databaseConfig.js`. This file is key to configuring your
 connection to the testing database.  Make any adjustments necessary
 to fit your environment.
 
 **IMPORTANT**:  See the configuration details above regarding the 
 SQL Server service account configuration.  If the service
 account does not have privileges to read/write from the path declared 
-in ./src/databaseConfig.js *snapshotStoragePath*, the tests will fail
+in `./src/databaseConfig.js` *snapshotStoragePath*, the tests will fail
 with errors related to the fact.
 
