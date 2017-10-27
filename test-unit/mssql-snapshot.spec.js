@@ -38,7 +38,10 @@ describe('mssql-snapshot', () => {
 		beforeEach(() => {
 			connect = stub().returns(Promise.resolve());
 			closeConnection = spy();
-			mssqlSnapshot = mockMssqlSnapshop(connect, closeConnection);
+			mssqlSnapshot = mockMssqlSnapshop({
+				connect,
+				closeConnection,
+			});
 			promise = createSnapshotUtility(createDatabaseConfig())(spy());
 		});
 
@@ -55,19 +58,67 @@ describe('mssql-snapshot', () => {
 		});
 	});
 
-	describe('connections will list all database connections', () => {
-		// throw new Error('Not Implemented Error');
+	describe('can list all snapshots', () => {
+		const _listAll = spy();
+		mockMssqlSnapshop({
+			_listAll,
+		});
+		createSnapshotUtility(createDatabaseConfig())(api => api.listAll())
+			.then(() => _listAll.should.have.been.called);
 	});
-})
-;
+
+	describe('can list all database connections', () => {
+		const _connections = spy();
+		mockMssqlSnapshop({
+			_connections,
+		});
+		createSnapshotUtility(createDatabaseConfig())(api => api.connections())
+			.then(() => _connections.should.have.been.called);
+	});
+
+	describe('can create a snapshot', () => {
+		const _create = spy();
+		mockMssqlSnapshop({
+			_create,
+		});
+		createSnapshotUtility(createDatabaseConfig())(api => api.create())
+			.then(() => _create.should.have.been.called);
+	});
+
+	describe('can delete a snapshot', () => {
+		const _delete = spy();
+		mockMssqlSnapshop({
+			_delete,
+		});
+		createSnapshotUtility(createDatabaseConfig())(api => api.delete())
+			.then(() => _delete.should.have.been.called);
+	});
+
+	describe('can restore a snapshot', () => {
+		const _restore = spy();
+		mockMssqlSnapshop({
+			_restore,
+		});
+		createSnapshotUtility(createDatabaseConfig())(api => api.restore())
+			.then(() => _restore.should.have.been.called);
+	});
+});
 
 // --
-function mockMssqlSnapshop(connect = stub().returns(Promise.resolve()), closeConnection = spy()) {
+function mockMssqlSnapshop(api = {}) {
 	const snapshotStub = stub()
-		.returns({
-			connect,
-			closeConnection,
-		});
+		.returns(Object.assign(
+			{
+				_connections: spy(),
+				_delete: spy(),
+				_create: spy(),
+				_listAll: spy(),
+				_restore: spy(),
+				closeConnection: spy(),
+				connect: stub().returns(Promise.resolve()),
+			},
+			api,
+		));
 	createSnapshotUtility.__Rewire__('MssqlSnapshot', snapshotStub);
 	return snapshotStub;
 }
