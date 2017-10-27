@@ -1,5 +1,5 @@
 import {spy, stub} from 'sinon';
-import createSnapshotUtility, {__RewireAPI__} from '../src';
+import createSnapshotUtility, {__RewireAPI__} from '../src/mssql-snapshot';
 
 describe('mssql-snapshot', () => {
 	describe('exports API', () => {
@@ -56,7 +56,7 @@ describe('mssql-snapshot', () => {
 	});
 
 	describe('connections will list all database connections', () => {
-		throw new Error('Not Implemented Error');
+		// throw new Error('Not Implemented Error');
 	});
 })
 ;
