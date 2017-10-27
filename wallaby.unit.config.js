@@ -4,12 +4,11 @@ module.exports = function (wallaby) {
 	return {
 		files: [
 			'src/**/*.js',
-			'src/queries/**/*.sql',
 			'test/testUtilities.js',
 			'test-setup/testHelper.js',
 		],
 		tests: [
-			'test/**/*spec.js'
+			'test-unit/**/*spec.js',
 		],
 		compilers: {
 			'**/*.js': wallaby.compilers.babel()
@@ -23,12 +22,7 @@ module.exports = function (wallaby) {
 		setup(w) {
 			const path = require('path');
 			require(path.join(w.localProjectDir, 'test-setup', 'testHelper'));
-			var mocha = w.testFramework;
-			mocha.timeout(10000);
+			w.testFramework.ui('bdd');
 		},
-		workers: {
-			initial: 1,
-			regular: 1
-		}
 	};
 };
