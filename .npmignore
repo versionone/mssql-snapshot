@@ -1,2 +1,5 @@
 src
-test
+test*
+.babelrc
+.editorconfig
+wallaby*.js
