@@ -5,8 +5,8 @@
   "main": "./lib/mssql-snapshot.js",
   "scripts": {
     "test": "concurrently \"npm run test/unit\" \"npm run test/integration\"",
-    "test/integration": "cross-env NODE_ENV=test mocha --compilers js:babel-core/register --require ./test-setup/testHelper.js --recursive --timeout 10000",
-    "test/unit": "cross-env NODE_ENV=test mocha test-unit --compilers js:babel-core/register --require ./test-setup/testHelper.js --recursive",
+    "test/integration": "cross-env NODE_ENV=test mocha test/test-integration --compilers js:babel-core/register --require ./test-setup/testHelper.js --recursive --timeout 10000",
+    "test/unit": "cross-env NODE_ENV=test mocha test/test-unit --compilers js:babel-core/register --require ./test-setup/testHelper.js --recursive",
     "clean": "rm -rf ./lib",
     "compile": "babel -d lib/ src/ && cp -r src/queries lib/queries",
     "watch": "babel -d -w src/ --out-dir lib/",

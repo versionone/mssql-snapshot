@@ -1,7 +1,7 @@
 import path from 'path';
 
-import MssqlSnapshot from '../src/MssqlSnapshot';
-import databaseConfig from '../src/databaseConfig';
+import MssqlSnapshot from '../../src/MssqlSnapshot';
+import databaseConfig from '../../src/databaseConfig';
 import {getDbMeta} from './testUtilities';
 
 describe('when retrieving database meta for a snapshot', function() {

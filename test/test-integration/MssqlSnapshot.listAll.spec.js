@@ -1,6 +1,6 @@
 import {createSnapshot, deleteSnapshot, getDbMeta} from './testUtilities';
-import databaseConfig from '../src/databaseConfig';
-import MssqlSnapshot from '../src/MssqlSnapshot';
+import databaseConfig from '../../src/databaseConfig';
+import MssqlSnapshot from '../../src/MssqlSnapshot';
 
 describe('when retrieving a list of snapshots and the configuration is valid', function() {
 	let target, dbConfig = null;

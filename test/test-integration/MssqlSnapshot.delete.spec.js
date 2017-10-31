@@ -1,5 +1,5 @@
-import MssqlSnapshot from '../src/MssqlSnapshot';
-import databaseConfig from '../src/databaseConfig'
+import MssqlSnapshot from '../../src/MssqlSnapshot';
+import databaseConfig from '../../src/databaseConfig'
 import {createSnapshot, getDbMeta, deleteSnapshot} from './testUtilities';
 
 describe("when deleting a named sql snapshot", function() {

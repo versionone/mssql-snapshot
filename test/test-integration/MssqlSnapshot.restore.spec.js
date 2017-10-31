@@ -1,6 +1,6 @@
 import {createSnapshot, deleteSnapshot, createConnection, bringOnline} from './testUtilities';
-import databaseConfig from '../src/databaseConfig';
-import MssqlSnapshot from '../src/MssqlSnapshot';
+import databaseConfig from '../../src/databaseConfig';
+import MssqlSnapshot from '../../src/MssqlSnapshot';
 
 describe('when restoring and no snapshot name is supplied', function() {
 	let target = new MssqlSnapshot(databaseConfig());

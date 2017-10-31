@@ -1,5 +1,5 @@
 import {spy, stub} from 'sinon';
-import createSnapshotUtility, {__RewireAPI__} from '../src/mssql-snapshot';
+import createSnapshotUtility, {__RewireAPI__} from '../../src/mssql-snapshot';
 
 describe('mssql-snapshot', () => {
 	describe('exports API', () => {

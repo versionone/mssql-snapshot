@@ -1,6 +1,6 @@
 import sql from 'seriate';
-import databaseConfig from '../src/databaseConfig'
-import * as Parameters from '../src/Parameters';
+import databaseConfig from '../../src/databaseConfig'
+import * as Parameters from '../../src/Parameters';
 import path from 'path';
 import fs from 'fs';
 
@@ -22,7 +22,7 @@ export function fileExists(filePath) {
 export function getDbMeta(snapshotName) {
 	const config = databaseConfig();
 	return sql.execute(config, {
-		query: sql.fromFile('../src/queries/getDbMeta.sql'),
+		query: sql.fromFile('../../src/queries/getDbMeta.sql'),
 		params: {
 			query: Parameters.query,
 			sourceDbName: Parameters.sourceDbName(config.database),
@@ -39,14 +39,14 @@ export function killConnections() {
     const config = databaseConfig();
 	return sql.getPlainContext(config.name)
 		.step("bringOffline", {
-			query: sql.fromFile('../src/queries/bringOffline.sql'),
+			query: sql.fromFile('../../src/queries/bringOffline.sql'),
 			params: {
 				sourceDbName: Parameters.sourceDbName(config.database),
 				query: Parameters.query,
 			}
 		})
 		.step("bringOnline", {
-			query: sql.fromFile('../src/queries/bringOnline.sql'),
+			query: sql.fromFile('../../src/queries/bringOnline.sql'),
 			params: {
 				sourceDbName: Parameters.sourceDbName(config.database),
 				query: Parameters.query,
@@ -60,7 +60,7 @@ export function killConnections() {
 export function bringOnline() {
 	const config = databaseConfig();
 	return sql.execute(config, {
-		query: sql.fromFile('../src/queries/bringOnline.sql'),
+		query: sql.fromFile('../../src/queries/bringOnline.sql'),
 		params: {
 			sourceDbName: Parameters.sourceDbName(config.database),
 			query: Parameters.query,
@@ -71,7 +71,7 @@ export function bringOnline() {
 export function deleteSnapshot(snapshotName) {
     const config = databaseConfig();
     return sql.execute(config, {
-        query: sql.fromFile('../src/queries/deleteSnapshot.sql'),
+        query: sql.fromFile('../../src/queries/deleteSnapshot.sql'),
         params: {
             snapshotName: Parameters.snapshotName(snapshotName),
             query: Parameters.query
@@ -82,7 +82,7 @@ export function deleteSnapshot(snapshotName) {
 export function createSnapshot(snapshotName, logicalName, snapshotStoragePath) {
     const config = databaseConfig();
     return sql.execute(config, {
-        query: sql.fromFile('../src/queries/createSnapshot.sql'),
+        query: sql.fromFile('../../src/queries/createSnapshot.sql'),
         params: {
             query: Parameters.query,
             sourceDbName: Parameters.sourceDbName(config.database),

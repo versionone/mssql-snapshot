@@ -1,7 +1,7 @@
 import fs from 'fs';
 
-import MssqlSnapshot from '../src/MssqlSnapshot';
-import databaseConfig from '../src/databaseConfig';
+import MssqlSnapshot from '../../src/MssqlSnapshot';
+import databaseConfig from '../../src/databaseConfig';
 import {deleteSnapshot, getDbMeta, fileExists} from './testUtilities';
 
 describe('when creating a named sql snapshot', function() {

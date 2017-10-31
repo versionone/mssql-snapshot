@@ -1,5 +1,5 @@
-import dbConfig from '../src/databaseConfig';
-import MssqlSnapshot from '../src/MssqlSnapshot';
+import dbConfig from '../../src/databaseConfig';
+import MssqlSnapshot from '../../src/MssqlSnapshot';
 import {killConnections, createConnection} from './testUtilities';
 
 describe('when retrieving active connections to a db', function() {

@@ -1,4 +1,4 @@
-import MssqlSnapshot from '../src/MssqlSnapshot';
+import MssqlSnapshot from '../../src/MssqlSnapshot';
 
 describe("when retrieving a database object to perform queries", function() {
     it("it doesnt throw when configuration is supplied", () => {
