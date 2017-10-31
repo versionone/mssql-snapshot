@@ -4,7 +4,7 @@
   "description": "An npm package for managing mssql snapshots.",
   "main": "./lib/mssql-snapshot.js",
   "scripts": {
-    "test": "concurrently 'npm run test/unit' 'npm run test/integration'",
+    "test": "concurrently \"npm run test/unit\" \"npm run test/integration\"",
     "test/integration": "NODE_ENV=test mocha --compilers js:babel-core/register --require ./test-setup/testHelper.js --recursive --timeout 10000",
     "test/unit": "NODE_ENV=test mocha test-unit --compilers js:babel-core/register --require ./test-setup/testHelper.js --recursive",
     "clean": "rm -rf ./lib",
