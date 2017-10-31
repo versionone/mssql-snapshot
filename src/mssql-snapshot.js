@@ -1,14 +1,14 @@
 import MssqlSnapshot from './MssqlSnapshot';
 
 export default (config) => cb => {
-	const connection = new MssqlSnapshot(config);
-	return connection.connect()
+	const snapshotMgr = new MssqlSnapshot(config);
+	return snapshotMgr.connect()
 		.then(() => cb({
-			connections: connection._connections,
-			create: connection._create,
-			restore: connection._restore,
-			listAll: connection._listAll,
-			delete: connection._delete,
+			connections: snapshotMgr._connections,
+			create: snapshotMgr._create,
+			restore: snapshotMgr._restore,
+			listAll: snapshotMgr._listAll,
+			delete: snapshotMgr._delete,
 		}))
-		.then(connection.closeConnection);
+		.then(snapshotMgr.closeConnection);
 };
