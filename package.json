@@ -1,6 +1,6 @@
 {
   "name": "mssql-snapshot",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "An npm package for managing mssql snapshots.",
   "main": "./lib/mssql-snapshot.js",
   "scripts": {
