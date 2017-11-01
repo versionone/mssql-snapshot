@@ -4,10 +4,7 @@ import createSnapshotUtility, {__RewireAPI__} from '../../src/mssql-snapshot';
 describe('mssql-snapshot', () => {
 	describe('exports API', () => {
 		it('exports a factory method to create snapshotters', () => {
-			mockMssqlSnapshop();
-
 			createSnapshotUtility.should.be.a('function');
-
 			const snapshotter = createSnapshotUtility();
 			snapshotter.should.be.a('function');
 		});
