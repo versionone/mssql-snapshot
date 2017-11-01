@@ -1,17 +1,14 @@
-import fs from 'fs';
-
-import MssqlSnapshot from '../../src/MssqlSnapshot';
+import createSnapshotUtility from '../../src/mssql-snapshot';
 import databaseConfig from '../../src/databaseConfig';
 import {deleteSnapshot, getDbMeta, fileExists} from './testUtilities';
 
 describe('when creating a named sql snapshot', function() {
 	let target = null;
 
-	beforeEach(() => target = new MssqlSnapshot({}));
+	beforeEach(() => target = createSnapshotUtility({}));
 
 	it('it throws when no snapshot name is supplied', () => {
-		const fn = () => target.create();
-		fn.should.throw('No snapshot name supplied.');
+		target((api) => api.create()).should.be.rejected;
 	});
 });
 
@@ -20,8 +17,8 @@ describe('when creating a named sql snapshot with valid configuration', function
 	const snapshotName = 'mssql-snapshot-testdb-when-creating';
 
 	beforeEach(() => {
-		let target = new MssqlSnapshot(dbConfig);
-		return target.create(snapshotName);
+		let target = createSnapshotUtility(dbConfig);
+		return target((api) => api.create(snapshotName));
 	});
 
 	afterEach(() => deleteSnapshot(snapshotName));

@@ -7,12 +7,12 @@ For more information about snapshots, their purpose, and usage
 please visit [Microsofts documentation site](https://msdn.microsoft.com/en-us/library/ms175158(v=sql.110).aspx).
 
 ## Configuration
-mssql-snapshot module is written using the 
+mssql-snapshot module is written using the
 [seriate library](https://github.com/LeanKit-Labs/seriate) as a
 dependency and therefore can use any its documented configuration structures
 with the addition of a single property, `snapshotStoragePath`, to
 indicate where you'd like to store the files for your snapshots.  A
-typical configuration object can be constructed as such so that 
+typical configuration object can be constructed as such so that
 snapshot files are stored in `c:\snapshots\`.
 
 ```javascript
@@ -27,10 +27,10 @@ snapshot files are stored in `c:\snapshots\`.
         min: 0,
         idleTimeoutMillis: 30000
     }
-}    
+}
 ```
 By default snapshots are stored in the same physical director as
-the source database to reduce the need to configure permissions 
+the source database to reduce the need to configure permissions
 on a separate folder.  Alternatively, you can configure a custom
 storage path by assigning a 'snapshotStoragePath' value at the
 root level in the config object passed in on construction (see above).
@@ -76,7 +76,7 @@ snapshotter(api => {
     api.connections(); //show existing connections to the current database excluding your own connection
     api.create('my-new-snapshot');  //create a new snapshot of the current database
     api.restore('my-existing-snapshot-name');  //restore from an existing snapshot
-    api.delete('my-old-snapshot'); //delete an existing snapshot by name
+    api.deleteSnapshot('my-old-snapshot'); //delete an existing snapshot by name
 });
 ```
 
@@ -91,14 +91,14 @@ Each API function and the snapshotter invocation returns a Promise.
 import createSnapshotter, { config } from 'mssql-snapshot';
 
 const snapshot = createSnapshotter(config());
-snapshot(api => 
-    Promise.all([ 
+snapshot(api =>
+    Promise.all([
         api.connections()
             .then(console.log),
-        
+
         api.create('mySnapShot')
             .then(() => api.restore('mySnapshot'))
-            .then(() => api.delete('mySnapshot')),
+            .then(() => api.deleteSnapshot('mySnapshot')),
     ])
 );
 ```
@@ -131,9 +131,9 @@ Next, take a look at the configuration file located in
 connection to the testing database.  Make any adjustments necessary
 to fit your environment.
 
-**IMPORTANT**:  See the configuration details above regarding the 
+**IMPORTANT**:  See the configuration details above regarding the
 SQL Server service account configuration.  If the service
-account does not have privileges to read/write from the path declared 
+account does not have privileges to read/write from the path declared
 in `./src/databaseConfig.js` *snapshotStoragePath*, the tests will fail
 with errors related to the fact.
 

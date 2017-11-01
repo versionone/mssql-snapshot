@@ -1,6 +1,6 @@
 import {createSnapshot, deleteSnapshot, getDbMeta} from './testUtilities';
 import databaseConfig from '../../src/databaseConfig';
-import MssqlSnapshot from '../../src/MssqlSnapshot';
+import createSnapshotUtility from '../../src/mssql-snapshot';
 
 describe('when retrieving a list of snapshots and the configuration is valid', function() {
 	let target, dbConfig = null;
@@ -9,7 +9,7 @@ describe('when retrieving a list of snapshots and the configuration is valid', f
 
 	beforeEach(() => {
 		dbConfig = databaseConfig();
-		target = new MssqlSnapshot(dbConfig);
+		target = createSnapshotUtility(dbConfig);
 		return getDbMeta(snapshotName)
 			.then((result) => {
 				return createSnapshot(snapshotName, result.LogicalName, result.PhysicalName)
@@ -20,17 +20,16 @@ describe('when retrieving a list of snapshots and the configuration is valid', f
 	afterEach(() => deleteSnapshot(snapshotName));
 
 	it('it returns one result', () => {
-		return target.listAll()
-			.should.eventually.have.length(1);
+		target((api) => api.listAll()).should.eventually.have.length(1);
 	});
 
 	it('it returns a result that contains the correct source database name', () => {
-		return target.listAll()
+		return target((api) => api.listAll())
 			.then((result) => result[0].SourceDatabase.should.eql(dbConfig.database));
 	});
 
 	it('it returns a result that contains the correct date of creation', () => {
-		return target.listAll().then(
+		return target((api) => api.listAll()).then(
 			(result) => {
 				result[0].DateOfCreation.getDay().should.eql(snapshotCreationTime.getDay());
 				result[0].DateOfCreation.getYear().should.eql(snapshotCreationTime.getYear());
@@ -46,9 +45,9 @@ describe('when retrieving a list of snapshots and the configuration is valid', f
 describe('when retrieving a list of snapshots and the configuration is invalid', function() {
 	let target = null;
 
-	beforeEach(() => target = new MssqlSnapshot({name: 'fakeConnection'}));
+	beforeEach(() => target = createSnapshotUtility({name: 'fakeConnection'}));
 
 	it('it returns a proper error', () => {
-		target.listAll('fakeConnection').should.be.rejectedWith('No connection is specified for that request.');
+		target((api) => api.listAll()).should.be.rejectedWith('No connection is specified for that request.');
 	});
 });

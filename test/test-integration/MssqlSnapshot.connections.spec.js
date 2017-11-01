@@ -1,17 +1,17 @@
 import dbConfig from '../../src/databaseConfig';
-import MssqlSnapshot from '../../src/MssqlSnapshot';
+import createSnapshotUtility from '../../src/mssql-snapshot';
 import {killConnections, createConnection} from './testUtilities';
 
 describe('when retrieving active connections to a db', function() {
 	let target = null;
 
 	beforeEach(() => {
-		target = new MssqlSnapshot(dbConfig());
+		target = createSnapshotUtility(dbConfig());
 		return Promise.all([killConnections, createConnection]);
 	});
 
 	it('it returns an accurate list that includes the current connection', (done) => {
-		target.connections().then(
+		target((api) => api.connections()).then(
 			(result) => {
 				result.length.should.eql(1);
 				result[0].should.have.property('BlockedBy');
