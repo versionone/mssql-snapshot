@@ -2,7 +2,7 @@ import {spy, stub} from 'sinon';
 import createSnapshotUtility, {__RewireAPI__} from '../../src/mssql-snapshot';
 
 describe('mssql-snapshot', () => {
-	describe('exports API', () => {
+	describe('exports the expected API functions', () => {
 		it('exports a factory method to create snapshotters', () => {
 			createSnapshotUtility.should.be.a('function');
 			const snapshotter = createSnapshotUtility();
@@ -10,8 +10,8 @@ describe('mssql-snapshot', () => {
 		});
 	});
 
-	describe('the snapshotter callback', () => {
-		it('is invoked with parameter containing snapshot API methods', () => {
+	describe('exposes a callback that ', () => {
+		it('is invoked with a parameter containing snapshot API methods', () => {
 			mockMssqlSnapshot();
 			const cb = spy();
 			const promise = createSnapshotUtility(createDatabaseConfig())(cb);
@@ -20,6 +20,7 @@ describe('mssql-snapshot', () => {
 			return promise.then(() => {
 				getCbArg(cb).listAll.should.be.a('function');
 				getCbArg(cb).connections.should.be.a('function');
+				getCbArg(cb).closeConnection.should.be.a('function');
 				getCbArg(cb).create.should.be.a('function');
 				getCbArg(cb).deleteSnapshot.should.be.a('function');
 				getCbArg(cb).restore.should.be.a('function');
@@ -29,17 +30,14 @@ describe('mssql-snapshot', () => {
 		});
 	});
 
-	describe('snapshotter will connect to the configured database before invoking the callback and close it afterwards', () => {
+	describe('will connect to the configured database before invoking the callback', () => {
 		let mssqlSnapshot;
 		let connect;
-		let closeConnection;
 		let promise;
 		beforeEach(() => {
 			connect = stub().returns(Promise.resolve());
-			closeConnection = spy();
 			mssqlSnapshot = mockMssqlSnapshot({
 				connect,
-				closeConnection,
 			});
 			promise = createSnapshotUtility(createDatabaseConfig())(spy());
 		});
@@ -50,60 +48,46 @@ describe('mssql-snapshot', () => {
 				connect.should.have.been.calledWith(createDatabaseConfig());
 			});
 		});
-		it('disconnects', () => {
-			return promise.then(() => {
-				closeConnection.should.have.been.called;
-			});
-		});
 	});
 
-	describe('can list all snapshots', () => {
-		const listAll = spy();
-		mockMssqlSnapshot({
-			listAll,
+	describe('the api can', () => {
+		const listAll = spy(), connections = spy(), closeConnection = spy(), deleteSnapshot = spy(), create = spy(), restore = spy();
+		let target, dbConfig = null;
+		beforeEach(() => {
+			dbConfig = createDatabaseConfig();
+			target = createSnapshotUtility(dbConfig);
+			return mockMssqlSnapshot({listAll, connections, closeConnection, create, deleteSnapshot, restore});
 		});
-		createSnapshotUtility(createDatabaseConfig())(api => api.listAll())
-			.then(() => listAll.should.have.been.called);
-	});
-
-	describe('can list all database connections', () => {
-		const connections = spy();
-		mockMssqlSnapshot({
-			connections,
+		it('list all snapshots', () => {
+			return target(api => api.listAll())
+				.then(() => listAll.should.have.been.called);
 		});
-		createSnapshotUtility(createDatabaseConfig())(api => api.connections())
-			.then(() => connections.should.have.been.called);
-	});
-
-	describe('can create a snapshot', () => {
-		const create = spy();
-		mockMssqlSnapshot({
-			create,
+		it('list all connections to the db', () => {
+			return target(api => api.connections())
+				.then(() => connections.should.have.been.called);
 		});
-		createSnapshotUtility(createDatabaseConfig())(api => api.create())
-			.then(() => create.should.have.been.called);
-	});
-
-	describe('can delete a snapshot', () => {
-		const deleteSnapshot = spy();
-		mockMssqlSnapshot({
-			deleteSnapshot,
+		it('close connections to the db', () => {
+			return target(api => api.closeConnection())
+				.then(() => closeConnection.should.have.been.called);
 		});
-		createSnapshotUtility(createDatabaseConfig())(api => api.deleteSnapshot())
-			.then(() => deleteSnapshot.should.have.been.called);
-	});
-
-	describe('can restore a snapshot', () => {
-		const restore = spy();
-		mockMssqlSnapshot({
-			restore,
+		it('display its configuration as it related to the db', () => {
+			return target(api => api.config.should.eql(dbConfig));
 		});
-		createSnapshotUtility(createDatabaseConfig())(api => api.restore())
-			.then(() => restore.should.have.been.called);
+		it('create a db snapshot', () => {
+			return target(api => api.create())
+				.then(() => create.should.have.been.called);
+		});
+		it('delete a db snapshot', () => {
+			return target(api => api.deleteSnapshot())
+				.then(() => deleteSnapshot.should.have.been.called);
+		});
+		it('restore a db snapshot', () => {
+			return target(api => api.restore())
+				.then(() => restore.should.have.been.called);
+		});
 	});
 });
 
-// --
 function mockMssqlSnapshot(api = {}) {
 	const snapshotStub = stub()
 		.returns(Object.assign(

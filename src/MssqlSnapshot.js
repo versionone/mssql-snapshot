@@ -19,6 +19,14 @@ export default class MssqlSnapshot {
 		});
 	}
 
+	closeConnection(results, config) {
+		return new Promise((resolve, reject) => {
+			this.connected = false;
+			sql.closeConnection(config);
+			resolve(results);
+		});
+	}
+
 	connections() {
 		return sql.execute(this.config.name, {
 			query: sql.fromFile('./queries/connections.sql'),

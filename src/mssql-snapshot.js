@@ -4,13 +4,13 @@ export default (config) => cb => {
 	const snapshotMgr = new MssqlSnapshot();
 	return snapshotMgr.connect(config)
 		.then(() => cb({
+			closeConnection: snapshotMgr.closeConnection,
+			config: config,
 			connections: snapshotMgr.connections,
 			create: snapshotMgr.create,
-			restore: snapshotMgr.restore,
-			listAll: snapshotMgr.listAll,
 			deleteSnapshot: snapshotMgr.deleteSnapshot,
 			getDbMeta: getDbMeta,
-            config: config,
-        }))
-		.then(snapshotMgr.closeConnection);
+			listAll: snapshotMgr.listAll,
+			restore: snapshotMgr.restore,
+        }));
 };
