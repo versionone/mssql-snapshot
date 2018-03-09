@@ -46,6 +46,6 @@
     "sinon-chai": "2.14.0"
   },
   "dependencies": {
-    "seriate": "0.9.0"
+    "seriate": "git://github.com/versionone/seriate#D-13330_momentjs_vuln"
   }
 }
