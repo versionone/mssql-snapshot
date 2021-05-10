@@ -7,7 +7,7 @@ describe('when retrieving active connections to a db', function() {
 
 	beforeEach(() => {
 		target = createSnapshotUtility(dbConfig());
-		return Promise.all([killConnections, createConnection]);
+		return killConnections().then(createConnection);
 	});
 
 	it('it returns an accurate list that includes the current connection', (done) => {

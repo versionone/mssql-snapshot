@@ -5,7 +5,7 @@ module.exports = function (wallaby) {
 		files: [
 			'src/**/*.js',
 			'src/queries/**/*.sql',
-			'test/testUtilities.js',
+			'test/test-integration/testUtilities.js',
 			'test-setup/testHelper.js',
 		],
 		tests: [

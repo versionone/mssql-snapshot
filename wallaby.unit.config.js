@@ -4,7 +4,6 @@ module.exports = function (wallaby) {
 	return {
 		files: [
 			'src/**/*.js',
-			'test/testUtilities.js',
 			'test-setup/testHelper.js',
 		],
 		tests: [

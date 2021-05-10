@@ -6,6 +6,7 @@ import fs from 'fs';
 
 export function createConnection() {
 	const config = databaseConfig();
+	sql.addConnection(config);
 	return sql.execute(config.name, {
 		query: `SELECT 1`
 	});
@@ -13,6 +14,7 @@ export function createConnection() {
 
 export function snapshotExists(snapshotName) {
 	const config = databaseConfig();
+	sql.addConnection(config);
 	return sql.execute(config, {
 		query: sql.fromFile('../../src/queries/listSnapshots.sql'),
 		params: {
@@ -26,6 +28,7 @@ export function snapshotExists(snapshotName) {
 
 export function getDbMeta(snapshotName) {
 	const config = databaseConfig();
+	sql.addConnection(config);
 	return sql.execute(config, {
 		query: sql.fromFile('../../src/queries/getDbMeta.sql'),
 		params: {
@@ -42,7 +45,13 @@ export function getDbMeta(snapshotName) {
 
 export function killConnections() {
 	const config = databaseConfig();
-	return sql.getPlainContext(config.name)
+	const masterConfig = {
+		...config,
+		name: `${config.name}-master`,
+		database: 'master'
+	}
+	sql.addConnection(masterConfig);
+	return sql.getPlainContext(masterConfig.name)
 		.step("bringOffline", {
 			query: sql.fromFile('../../src/queries/bringOffline.sql'),
 			params: {
@@ -59,22 +68,36 @@ export function killConnections() {
 		})
 		.error((err) => {
 			console.log(err);
+		}).then(() => {
+			sql.closeConnection(masterConfig);
 		});
 }
 
 export function bringOnline() {
 	const config = databaseConfig();
-	return sql.execute(config, {
-		query: sql.fromFile('../../src/queries/bringOnline.sql'),
-		params: {
-			sourceDbName: Parameters.sourceDbName(config.database),
-			query: Parameters.query,
-		}
-	});
+	const masterConfig = {
+		...config,
+		name: `${config.name}-master`,
+		database: 'master'
+	}
+	sql.addConnection(masterConfig);
+	return sql.execute(masterConfig, {
+			query: sql.fromFile('../../src/queries/bringOnline.sql'),
+			params: {
+				sourceDbName: Parameters.sourceDbName(config.database),
+				query: Parameters.query,
+			}
+		}).catch(err => {
+			console.err("an error", err);
+		}).then(() => {
+			sql.closeConnection(masterConfig);
+			sql.closeConnection(config);
+		});
 }
 
 export function deleteSnapshot(snapshotName) {
 	const config = databaseConfig();
+	sql.addConnection(config);
 	return sql.execute(config, {
 		query: sql.fromFile('../../src/queries/deleteSnapshot.sql'),
 		params: {
@@ -86,6 +109,7 @@ export function deleteSnapshot(snapshotName) {
 
 export function createSnapshot(snapshotName, logicalName, snapshotStoragePath) {
 	const config = databaseConfig();
+	sql.addConnection(config);
 	return sql.execute(config, {
 		query: sql.fromFile('../../src/queries/createSnapshot.sql'),
 		params: {

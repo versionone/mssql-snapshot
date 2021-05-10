@@ -34,7 +34,7 @@ describe('when restoring from a snapshot that exists and active connections exis
 		return Promise.all([createSnapshot(snapshotName), createConnection]);
 	});
 
-	afterEach(() => Promise.all([deleteSnapshot(snapshotName), bringOnline]));
+	afterEach(() => deleteSnapshot(snapshotName).then(bringOnline));
 
 	it('it restores successfully', () => {
 		return target((api) => api.restore(snapshotName)).should.be.fulfilled;
