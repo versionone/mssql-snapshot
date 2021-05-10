@@ -15,7 +15,7 @@ describe('mssql-snapshot', () => {
 			mockMssqlSnapshot();
 			const cb = spy();
 			const promise = createSnapshotUtility(createDatabaseConfig())(cb);
-			promise.should.eventually.be.fullfilled;
+			promise.should.eventually.be.fulfilled;
 
 			return promise.then(() => {
 				getCbArg(cb).listAll.should.be.a('function');
