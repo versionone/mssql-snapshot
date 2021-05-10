@@ -1,5 +1,5 @@
 {
-  "name": "mssql-snapshot",
+  "name": "@versionone/mssql-snapshot",
   "version": "1.1.2",
   "description": "An npm package for managing mssql snapshots.",
   "main": "./lib/mssql-snapshot.js",
@@ -24,7 +24,8 @@
   ],
   "author": "codeEmitter",
   "contributors": [
-    "Andrew Smith <andrew@andrew.codes>"
+    "Andrew Smith <andrew@andrew.codes>",
+    "Jim Allers <jim.allers@gmail.com>"
   ],
   "license": "MIT",
   "bugs": {
