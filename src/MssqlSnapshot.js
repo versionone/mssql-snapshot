@@ -90,7 +90,6 @@ export default class MssqlSnapshot {
 
 	listAll() {
 		sql.addConnection(this.config);
-		console.log('sql.addConnection()', this.config.name);
 		return sql.execute(this.config.name, {
 			query: sql.fromFile('./queries/listSnapshots.sql'),
 			params: {
